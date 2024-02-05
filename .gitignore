@@ -24,5 +24,6 @@
 *.user
 *.tsserver.log
 *.log
+.env
 node_modules/
 npm-debug.log
