@@ -4,6 +4,7 @@
 /AlloMedic/node_modules
 /backend/node_modules
 /backend/combined.log
+/backend/.env
 
 # Expo build artifacts
 /AlloMedic/.expo
