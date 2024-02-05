@@ -1,0 +1,10 @@
+{
+  "name": "AlloMedicBackend",
+  "version": "1.0.0",
+  "description": "Back end server for AlloMedic Mobile App run by Express",
+  "main": "core.js",
+  "repository": "https://github.com/Yassinos-coder/AlloMedic.git",
+  "author": "Yassinos <castroyassine0@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
