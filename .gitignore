@@ -1,13 +1,13 @@
 # .gitignore for Expo app
 
 # Node modules
-/app/node_modules
+/AlloMedic/node_modules
 /backend/node_modules
 
 # Expo build artifacts
-/app/.expo
-/app/.expo-shared
-/app/build
+/AlloMedic/.expo
+/AlloMedic/.expo-shared
+/AlloMedic/build
 
 # IDE files
 .idea
