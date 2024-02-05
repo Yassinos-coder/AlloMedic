@@ -1,10 +1,10 @@
-import { HomeStyle } from './HomeStyles'
+import { HomeStyles } from './HomeStyles'
 import { Text, View } from 'react-native'
 import React from 'react'
 
 const HomeScreen = () => {
   return (
-    <View style={HomeStyle.container}>
+    <View style={HomeStyles.container}>
       <Text>HomeScreen</Text>
     </View>
   )
