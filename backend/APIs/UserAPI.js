@@ -2,54 +2,46 @@ const { Router } = require("express");
 const { body, validationResult } = require("express-validator");
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const { SendSMS } = require("../utils/Twilio"); // args => to, body
-const { generateToken, verifyToken } = require("../utils/JwtAuth"); // args => uuid
+const { SendSMS } = require("../utils/Twilio");
+const { generateToken, verifyToken } = require("../utils/JwtAuth");
 const userRouter = Router();
 
 const saltRounds = 10;
 
-// PhoneNumber Verification Using Twilio See: utils/Twilio.js
+// PhoneNumber Verification Using Twilio
 userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
   let uuid = req.params.uuid;
   try {
-    const userData = await UserModel.findOne({ _id: uuid });
-    if (userData) {
-      function generateSixDigitString() {
-        return Math.floor(100000 + Math.random() * 900000).toString();
-      }
-      const randomSixDigitString = generateSixDigitString();
+    const userData = await UserModel.findById(uuid);
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "USER_NOT_FOUND" });
+    }
 
-      const resultSendSMS = await SendSMS(
-        userData.phoneNumber,
-        `Votre code de vérification pour le numéro de téléphone est : ${randomSixDigitString}.`
-      );
-      if (resultSendSMS === true) {
-        await UserModel.updateOne({ _id: uuid }, { isPhoneVerified: true });
-        res.send({
-          success: true,
-          code: randomSixDigitString,
-        });
-      } else {
-        res.send({
-          success: false,
-        });
-      }
-    } else {
-      res.send({
-        success: false,
-        message: "USER_NO_EXIST",
+    function generateSixDigitString() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+    const randomSixDigitString = generateSixDigitString();
+
+    const resultSendSMS = await SendSMS(
+      userData.phoneNumber,
+      `Votre code de vérification pour le numéro de téléphone est : ${randomSixDigitString}.`
+    );
+    if (resultSendSMS === true) {
+      await UserModel.findByIdAndUpdate(uuid, { isPhoneVerified: true });
+      res.status(200).json({
+        success: true,
+        code: randomSixDigitString,
       });
+    } else {
+      res.status(500).json({ success: false, message: "SMS_SENDING_FAILED" });
     }
   } catch (err) {
-    res.send({
-      success: false,
-      error: err,
-    });
-    throw err;
+    console.error("Error occurred while verifying phone:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
-// Email Verification Using NodeMailer See: utils/NodeMailer.js
 
 // User SignUp
 const validateSignup = [
@@ -58,67 +50,150 @@ const validateSignup = [
 ];
 
 userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ success: false, errors: errors.array() });
   }
   try {
-    let newUser = req.body;
-    const doesUserExists = await UserModel.findOne({ email: newUser.email });
-    if (!doesUserExists) {
-      const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
-      newUser.password = hashedPassword;
-      const saveNewUser = new UserModel(newUser);
-      const isUserSaved = await saveNewUser.save();
-      if (isUserSaved) {
-        res.status(201).json({ success: true });
-      } else {
-        res.status(500).json({ success: false });
-      }
-    } else {
-      res.status(409).json({ success: false, message: "USER_EXISTS" });
+    const newUser = req.body;
+    const doesUserExist = await UserModel.exists({ email: newUser.email });
+    if (doesUserExist) {
+      return res
+        .status(409)
+        .json({ success: false, message: "USER_ALREADY_EXISTS" });
     }
+
+    const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
+    newUser.password = hashedPassword;
+    const saveNewUser = new UserModel(newUser);
+    await saveNewUser.save();
+    res.status(201).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal server error." });
+    console.error("Error occurred during signup:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
 // User Signin
 userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ success: false, errors: errors.array() });
   }
   try {
-    let loginData = req.body;
-    const doesUserExists = await UserModel.findOne({ email: loginData.email });
-    if (doesUserExists) {
-      const passwordComparaison = bcrypt.compareSync(
-        loginData.password,
-        doesUserExists.password
-      );
-      if (passwordComparaison) {
-        let newToken = generateToken(doesUserExists._id);
-        // below converting doesUserExists to object and then removing password field
-        const userObject = doesUserExists.toObject();
-        delete userObject.password;
-        res.status(200).json({ userData: userObject, token: newToken, success: true });
-      } else {
-        res.status(401).json({ success: false, message: "WRONG_PASS" });
-      }
-    } else {
-      res.status(401).json({ success: false, message: "USER_NO_EXIST" });
+    const loginData = req.body;
+    const user = await UserModel.findOne({ email: loginData.email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "INVALID_CREDENTIALS" });
     }
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error: " + err.message,
-    });
-    throw err;
+    const passwordMatch = bcrypt.compareSync(loginData.password, user.password);
+    if (!passwordMatch) {
+      return res
+        .status(401)
+        .json({ success: false, message: "INVALID_CREDENTIALS" });
+    }
+    const token = generateToken(user._id);
+    const userData = user.toObject();
+    delete userData.password;
+    res.status(200).json({ userData, token, success: true });
+  } catch (error) {
+    console.error("Error occurred during signin:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+// GetUserData from db
+userRouter.get(
+  "/api/users/GetUserData/:uuid",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const uuid = req.params.uuid;
+      const user = await UserModel.findById(uuid);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "USER_NOT_FOUND" });
+      }
+      const userData = user.toObject();
+      delete userData.password;
+      res.status(200).json({ success: true, userData });
+    } catch (error) {
+      console.error("Error occurred while getting user data:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  }
+);
+
+// Update Password
+userRouter.post(
+  "/api/users/updatePassword/:uuid",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const uuid = req.params.uuid;
+      const { oldpassword, newpassword } = req.body;
+      const user = await UserModel.findById(uuid);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "USER_NOT_FOUND" });
+      }
+      const passwordMatch = bcrypt.compareSync(oldpassword, user.password);
+      if (!passwordMatch) {
+        return res
+          .status(401)
+          .json({ success: false, message: "INVALID_PASSWORD" });
+      }
+      const hashedPassword = bcrypt.hashSync(newpassword, saltRounds);
+      await UserModel.findByIdAndUpdate(uuid, { password: hashedPassword });
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error occurred while updating password:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  }
+);
+
+// Email Update
+userRouter.post(
+  "/api/users/UpdateEmail/:uuid",
+  verifyToken,
+  validateSignup,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+    try {
+      const uuid = req.params.uuid;
+      const { email } = req.body;
+      const user = await UserModel.findById(uuid);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "USER_NOT_FOUND" });
+      }
+      const updateResponse = await UserModel.findByIdAndUpdate(uuid, { email });
+      if (!updateResponse) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Email update failed" });
+      }
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error occurred while updating email:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  }
+);
 
 module.exports = userRouter;
