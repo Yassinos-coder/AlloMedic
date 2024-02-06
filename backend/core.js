@@ -83,4 +83,5 @@ app.listen(process.env.BACK_END, () =>
 
 /* API ROUTERS IMPORT */
 const UserAPI = require("./APIs/UserAPI");
-app.use(UserAPI);
+const OrderAPI = require("./APIs/OrdersAPI");
+app.use(UserAPI, OrderAPI);

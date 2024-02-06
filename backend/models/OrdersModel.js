@@ -21,10 +21,14 @@ const OrdersSchema = db.Schema({
     type: String,
     required: true,
   },
-  note: {
+  order_status: {
     type: String,
     required: true,
   },
+  note: {
+    type: String,
+    required: true,
+  }
 });
 
 const OrdersModel = db.model("Orders", OrdersSchema);
