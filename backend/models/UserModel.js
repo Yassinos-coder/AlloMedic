@@ -51,7 +51,7 @@ const UserSchema = db.Schema({
   },
   price_of_responder: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 

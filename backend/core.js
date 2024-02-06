@@ -17,8 +17,6 @@ const logger = winston.createLogger({
   ],
 });
 
-/* API ROUTERS IMPORT */
-
 /* Limit number of requests */
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -75,16 +73,14 @@ mongoose
   });
 
 app.use((err, req, res, next) => {
- // logger.error(err.stack);
+  // logger.error(err.stack);
   res.status(500).send("Something went wrong!");
-});
-
-app.use("/", async (req, res) => {
-  res.send(
-    '<p style="font-size: 50px; color: red; font-family: Arial, sans-serif;">Get out of here stupid</p>'
-  );
 });
 
 app.listen(process.env.BACK_END, () =>
   console.log(`Server Created Succesfuly on port ${process.env.BACK_END}`)
 );
+
+/* API ROUTERS IMPORT */
+const UserAPI = require("./APIs/UserAPI");
+app.use(UserAPI);
