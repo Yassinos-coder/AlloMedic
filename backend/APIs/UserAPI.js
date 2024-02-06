@@ -85,4 +85,40 @@ userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
   }
 });
 
+// User Signin
+userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, errors: errors.array() });
+  }
+  try {
+    let loginData = req.body;
+    const doesUserExists = await UserModel.findOne({ email: loginData.email });
+    if (doesUserExists) {
+      const passwordComparaison = bcrypt.compareSync(
+        loginData.password,
+        doesUserExists.password
+      );
+      if (passwordComparaison) {
+        let newToken = generateToken(doesUserExists._id);
+        // below converting doesUserExists to object and then removing password field
+        const userObject = doesUserExists.toObject();
+        delete userObject.password;
+        res.status(200).json({ userData: userObject, token: newToken, success: true });
+      } else {
+        res.status(401).json({ success: false, message: "WRONG_PASS" });
+      }
+    } else {
+      res.status(401).json({ success: false, message: "USER_NO_EXIST" });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error: " + err.message,
+    });
+    throw err;
+  }
+});
+
 module.exports = userRouter;
