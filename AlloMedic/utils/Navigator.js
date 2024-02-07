@@ -19,6 +19,7 @@ const NonAuthNav = () => {
         backBehavior="order"
       >
         <drawer.Screen name="Auth" component={AuthScreen} />
+
         {/* <drawer.Screen name="Report" /> */}
       </drawer.Navigator>
     </>

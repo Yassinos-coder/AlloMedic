@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { Provider } from "react-redux";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -46,6 +46,11 @@ export default function App() {
 
   return (
     <Provider store={Store}>
+      <StatusBar
+        animated={true}
+        showHideTransition={"fade"}
+        barStyle={"default"}
+      />
       <View
         style={{ flex: 1, backgroundColor: "#fff" }}
         onLayout={onLayoutRootView}
