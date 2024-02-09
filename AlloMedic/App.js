@@ -46,11 +46,8 @@ export default function App() {
 
   return (
     <Provider store={Store}>
-      <StatusBar
-        animated={true}
-        showHideTransition={"fade"}
-        barStyle={"default"}
-      />
+      <StatusBar backgroundColor="#fff" barStyle={"dark-content"} />
+
       <View
         style={{ flex: 1, backgroundColor: "#fff" }}
         onLayout={onLayoutRootView}

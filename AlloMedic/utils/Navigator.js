@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
-import AuthScreen from "../screens/AuthScreen/AuthScreen";
+import LoginScreen from "../screens/LoginScreen/LoginScreen";
 
 const drawer = createDrawerNavigator();
 
@@ -18,7 +18,7 @@ const NonAuthNav = () => {
         }}
         backBehavior="order"
       >
-        <drawer.Screen name="Auth" component={AuthScreen} />
+        <drawer.Screen name="Auth" component={LoginScreen} />
 
         {/* <drawer.Screen name="Report" /> */}
       </drawer.Navigator>
@@ -34,7 +34,7 @@ const AuthNav = () => {
         screenOptions={{ headerShown: false }}
         backBehavior="order"
       >
-        <drawer.Screen name="Auth" component={AuthScreen} />
+        <drawer.Screen name="Auth" component={LoginScreen} />
         {/* <drawer.Screen name="Home" />
         <drawer.Screen name="Profile" />
         <drawer.Screen name="AppSettings" />
