@@ -85,19 +85,26 @@ userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
     const user = await UserModel.findOne({ email: loginData.email });
     if (!user) {
       return res
-        .status(401)
+        .status(200)
         .json({ success: false, message: "INVALID_CREDENTIALS" });
     }
     const passwordMatch = bcrypt.compareSync(loginData.password, user.password);
     if (!passwordMatch) {
       return res
-        .status(401)
+        .status(200)
         .json({ success: false, message: "INVALID_CREDENTIALS" });
     }
     const token = generateToken(user._id);
     const userData = user.toObject();
     delete userData.password;
-    res.status(200).json({ userData, token, success: true });
+    res
+      .status(200)
+      .json({
+        userData,
+        token,
+        success: true,
+        loginResult: passwordMatch,
+      });
   } catch (error) {
     console.error("Error occurred during signin:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -146,7 +153,7 @@ userRouter.post(
       const passwordMatch = bcrypt.compareSync(oldpassword, user.password);
       if (!passwordMatch) {
         return res
-          .status(401)
+          .status(200)
           .json({ success: false, message: "INVALID_PASSWORD" });
       }
       const hashedPassword = bcrypt.hashSync(newpassword, saltRounds);

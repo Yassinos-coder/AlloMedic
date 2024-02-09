@@ -62,9 +62,14 @@ app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
 app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
 
+// Set mongoose options
 mongoose.set("strictQuery", false);
+
+// Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {})
+  .connect(process.env.MONGO_URI, {
+    dbName: "AlloMedic",
+  })
   .then(() => {
     console.log("Database connection granted");
   })

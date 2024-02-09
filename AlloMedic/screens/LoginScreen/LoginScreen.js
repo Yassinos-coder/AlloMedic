@@ -1,6 +1,7 @@
 import { LoginStyles } from "./LoginStyles";
 import React, { useState } from "react";
 import {
+  Alert,
   Button,
   Image,
   Pressable,
@@ -11,10 +12,47 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import LoginModel from "../../models/LoginModel";
+import { useDispatch } from "react-redux";
+import { Signin, setConnectionStatus } from "../../redux/UserReducer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
+  const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState("square");
   const [loginData, setLoginData] = useState(new LoginModel());
+  const SigninTrigger = () => {
+    dispatch(Signin({ loginData: loginData }))
+      .then(async (response) => {
+        if (!response.payload.loginResult) {
+          console.log(response);
+          switch (response.payload.message) {
+            case "INVALID_CREDENTIALS":
+              Alert.alert("Password or User doesn't exist!");
+              break;
+            case "Internal server error":
+              Alert.alert("Internal Error, Try Again!");
+              break;
+            default:
+              Alert.alert("An error occurred, please try again later!");
+          }
+        } else {
+          dispatch(setConnectionStatus());
+          console.log(response.payload);
+          await AsyncStorage.setItem("tokenKey", response.payload.token);
+          await AsyncStorage.setItem(
+            "userLoggedIn",
+            JSON.stringify(response.payload.loginResult)
+          );
+          await AsyncStorage.setItem(
+            "userData",
+            JSON.stringify(response.payload.userData)
+          );
+        }
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
+  };
   return (
     <View style={LoginStyles.container}>
       <StatusBar backgroundColor="#fff" barStyle={"dark-content"} />
@@ -64,7 +102,16 @@ const LoginScreen = () => {
             </View>
           </Pressable>
         </View>
-        <Pressable style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
+        <Pressable
+          style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
+          onPress={() => {
+            if (loginData.email === "" || loginData.password === "") {
+              Alert.alert("Fileds cannot be empty!");
+            } else {
+              SigninTrigger();
+            }
+          }}
+        >
           <View style={LoginStyles.buttonView}>
             <Text style={LoginStyles.buttonText}>Sign in</Text>
           </View>
