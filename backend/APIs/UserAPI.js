@@ -35,11 +35,11 @@ userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
         code: randomSixDigitString,
       });
     } else {
-      res.status(500).json({ success: false, message: "SMS_SENDING_FAILED" });
+      res.status(200).json({ success: false, message: "SMS_SENDING_FAILED" });
     }
   } catch (err) {
     console.error("Error occurred while verifying phone:", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(200).json({ success: false, message: "Internal server error" });
   }
 });
 
@@ -70,7 +70,7 @@ userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
     res.status(201).json({ success: true });
   } catch (error) {
     console.error("Error occurred during signup:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(200).json({ success: false, message: "Internal server error" });
   }
 });
 
@@ -107,7 +107,7 @@ userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
       });
   } catch (error) {
     console.error("Error occurred during signin:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(200).json({ success: false, message: "Internal server error" });
   }
 });
 
@@ -130,7 +130,7 @@ userRouter.get(
     } catch (error) {
       console.error("Error occurred while getting user data:", error);
       res
-        .status(500)
+        .status(200)
         .json({ success: false, message: "Internal server error" });
     }
   }
@@ -162,7 +162,7 @@ userRouter.post(
     } catch (error) {
       console.error("Error occurred while updating password:", error);
       res
-        .status(500)
+        .status(200)
         .json({ success: false, message: "Internal server error" });
     }
   }
@@ -190,14 +190,14 @@ userRouter.post(
       const updateResponse = await UserModel.findByIdAndUpdate(uuid, { email });
       if (!updateResponse) {
         return res
-          .status(500)
+          .status(200)
           .json({ success: false, message: "Email update failed" });
       }
       res.status(200).json({ success: true });
     } catch (error) {
       console.error("Error occurred while updating email:", error);
       res
-        .status(500)
+        .status(200)
         .json({ success: false, message: "Internal server error" });
     }
   }

@@ -14,7 +14,7 @@ OrdersRouter.get("/api/orders/GetAllOrders", verifyToken, async (req, res) => {
     res.status(200).json({ success: true, orders: allOrders });
   } catch (err) {
     console.error("Error occurred during GetAllOrders:", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(200).json({ success: false, message: "Internal server error" });
   }
 });
 
@@ -31,7 +31,7 @@ OrdersRouter.post(
     } catch (err) {
       console.error("Error occurred during CreateOrder:", err);
       res
-        .status(500)
+        .status(200)
         .json({ success: false, message: "Internal server error" });
     }
   }
@@ -60,7 +60,7 @@ OrdersRouter.post(
       res.status(200).json({ success: true });
     } catch (err) {
       console.error("Error occurred during UpdateOrderStatus:", err);
-      res.status(500).json({ success: false, error: "Internal server error" });
+      res.status(200).json({ success: false, error: "Internal server error" });
     }
   }
 );

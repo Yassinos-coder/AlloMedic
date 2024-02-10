@@ -16,10 +16,11 @@ import { useDispatch } from "react-redux";
 import { Signin, setConnectionStatus } from "../../redux/UserReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState("square");
   const [loginData, setLoginData] = useState(new LoginModel());
+
   const SigninTrigger = () => {
     dispatch(Signin({ loginData: loginData }))
       .then(async (response) => {
@@ -67,7 +68,9 @@ const LoginScreen = () => {
           placeholder="Email"
           keyboardType="email-address"
           value={loginData.email}
-          onChangeText={(text) => setLoginData({ ...loginData, email: text })}
+          onChangeText={(text) =>
+            setLoginData({ ...loginData, email: text.toLowerCase() })
+          }
         />
         <TextInput
           style={LoginStyles.Inputs}
@@ -106,7 +109,7 @@ const LoginScreen = () => {
           style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
           onPress={() => {
             if (loginData.email === "" || loginData.password === "") {
-              Alert.alert("Fileds cannot be empty!");
+              Alert.alert("Fields cannot be empty!");
             } else {
               SigninTrigger();
             }
@@ -117,18 +120,30 @@ const LoginScreen = () => {
           </View>
         </Pressable>
       </View>
-      <Text style={LoginStyles.noAccount}>Don{"'"}t have an account yet?</Text>
-      <Pressable style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
-        <View
-          style={[
-            LoginStyles.buttonView,
-            { alignSelf: "center", marginTop: 20, backgroundColor: "#333333" },
-          ]}
+      <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        <Text style={LoginStyles.noAccount}>
+          Don{"'"}t have an account yet?
+        </Text>
+        <Pressable
+          style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
+          onPress={() => {
+            navigation.navigate("Signup");
+          }}
         >
-          <Text style={LoginStyles.buttonText}>Sign in</Text>
-        </View>
-      </Pressable>
-      <View style={{ alignSelf: "center", flex: 1, justifyContent: "center" }}>
+          <View
+            style={[
+              LoginStyles.buttonView,
+              {
+                alignSelf: "center",
+                marginTop: 20,
+                backgroundColor: "#333333",
+              },
+            ]}
+          >
+            <Text style={LoginStyles.buttonText}>Sign up</Text>
+          </View>
+        </Pressable>
+
         <Text style={{ textAlign: "center", color: "#999999", fontSize: 12 }}>
           Copyright © CASTRO Digital Solutions
         </Text>
