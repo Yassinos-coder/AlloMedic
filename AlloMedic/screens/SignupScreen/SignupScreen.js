@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { SignupStyles } from "./SignupStyles";
 import { AntDesign } from "@expo/vector-icons";
 
-const SignupScreen = () => {
+const SignupScreen = ({ navigation }) => {
   const [role, setRole] = useState("user");
   return (
     <View style={SignupStyles.container}>
@@ -13,6 +13,7 @@ const SignupScreen = () => {
           name="arrowleft"
           size={25}
           color="black"
+          onPress={() => navigation.goBack()}
         />
         <Image
           style={SignupStyles.imageRightSide}
