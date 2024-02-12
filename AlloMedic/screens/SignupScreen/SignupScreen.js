@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import { SignupStyles } from "./SignupStyles";
 import { AntDesign } from "@expo/vector-icons";
@@ -6,7 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 const SignupScreen = ({ navigation }) => {
   const [role, setRole] = useState("user");
   return (
-    <View style={SignupStyles.container}>
+    <SafeAreaView style={SignupStyles.container} accessible={true}>
       <View style={SignupStyles.headerSignup}>
         <AntDesign
           style={SignupStyles.BackArrow}
@@ -14,10 +14,13 @@ const SignupScreen = ({ navigation }) => {
           size={25}
           color="black"
           onPress={() => navigation.goBack()}
+          accessibilityLabel="Go back"
+          accessibilityRole="button"
         />
         <Image
           style={SignupStyles.imageRightSide}
           source={require("../../assets/images/SignupScreenRightImage.png")}
+          accessibilityLabel="Signup Screen Image"
         />
       </View>
       <Text
@@ -28,24 +31,31 @@ const SignupScreen = ({ navigation }) => {
           marginLeft: 20,
           marginTop: -80,
         }}
+        accessibilityLabel="Create New Account"
       >
         Create New Account
       </Text>
-      <View style={SignupStyles.roleView}>
+      <View style={SignupStyles.roleView} accessible={true}>
         <Pressable
           onPress={() => {
             if (role === "medic") {
               setRole("user");
             } else {
-              setRole("medic");
+              setRole("user");
             }
           }}
+          accessible={true}
         >
           <View
             style={[
               SignupStyles.userRole,
-              role === "medic" ? {} : { backgroundColor: "#333333" },
+              role === "medic"
+                ? {}
+                : { backgroundColor: "#333333", borderRadius: 20 },
             ]}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="User role button"
           >
             <Text
               style={
@@ -61,15 +71,22 @@ const SignupScreen = ({ navigation }) => {
             if (role === "user") {
               setRole("medic");
             } else {
-              setRole("user");
+              setRole("medic");
             }
           }}
+          accessible={true}
         >
           <View
             style={[
               SignupStyles.userRole,
-              role === "medic" ? { backgroundColor: "#333333" } : {},
+
+              role === "medic"
+                ? { backgroundColor: "#333333", borderRadius: 20 }
+                : {},
             ]}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Medic role button"
           >
             <Text
               style={
@@ -81,7 +98,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

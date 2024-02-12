@@ -5,6 +5,7 @@ import {
   Button,
   Image,
   Pressable,
+  SafeAreaView,
   StatusBar,
   Text,
   TextInput,
@@ -55,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
       });
   };
   return (
-    <View style={LoginStyles.container}>
+    <SafeAreaView style={LoginStyles.container}>
       <StatusBar backgroundColor="#fff" barStyle={"dark-content"} />
       <Image
         style={LoginStyles.loginImage}
@@ -148,7 +149,7 @@ const LoginScreen = ({ navigation }) => {
           Copyright © CASTRO Digital Solutions
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

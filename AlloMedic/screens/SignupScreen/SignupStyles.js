@@ -37,6 +37,5 @@ export const SignupStyles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 20
   },
 });
