@@ -13,6 +13,18 @@ export const Signin = createAsyncThunk(
   }
 );
 
+export const Signup = createAsyncThunk(
+  "users/Signup",
+  async ({ SignupData }) => {
+    try {
+      const response = await AxiosDefault.post("/api/users/signup", SignupData);
+      return response.data;
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+);
+
 const UserReducer = createSlice({
   name: "UserReducer",
   initialState: {
@@ -37,6 +49,16 @@ const UserReducer = createSlice({
         state.status = "pending";
       })
       .addCase(Signin.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload.message;
+      })
+      .addCase(Signup.fulfilled, (state, action) => {
+        state.status = "accepted";
+      })
+      .addCase(Signup.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(Signup.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload.message;
       });

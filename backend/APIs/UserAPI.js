@@ -15,7 +15,7 @@ userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
     const userData = await UserModel.findById(uuid);
     if (!userData) {
       return res
-        .status(404)
+        .status(200)
         .json({ success: false, message: "USER_NOT_FOUND" });
     }
 
@@ -52,14 +52,15 @@ const validateSignup = [
 userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    return res.status(200).json({ success: false, errors: errors.array() });
   }
   try {
     const newUser = req.body;
-    const doesUserExist = await UserModel.exists({ email: newUser.email });
+    console.log(req.body)
+    const doesUserExist = await UserModel.findOne({ email: newUser.email });
     if (doesUserExist) {
       return res
-        .status(409)
+        .status(200)
         .json({ success: false, message: "USER_ALREADY_EXISTS" });
     }
 
@@ -78,7 +79,7 @@ userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
 userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array() });
+    return res.status(200).json({ success: false, errors: errors.array() });
   }
   try {
     const loginData = req.body;
@@ -121,7 +122,7 @@ userRouter.get(
       const user = await UserModel.findById(uuid);
       if (!user) {
         return res
-          .status(404)
+          .status(200)
           .json({ success: false, message: "USER_NOT_FOUND" });
       }
       const userData = user.toObject();
@@ -147,7 +148,7 @@ userRouter.post(
       const user = await UserModel.findById(uuid);
       if (!user) {
         return res
-          .status(404)
+          .status(200)
           .json({ success: false, message: "USER_NOT_FOUND" });
       }
       const passwordMatch = bcrypt.compareSync(oldpassword, user.password);
@@ -176,7 +177,7 @@ userRouter.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      return res.status(200).json({ success: false, errors: errors.array() });
     }
     try {
       const uuid = req.params.uuid;
@@ -184,7 +185,7 @@ userRouter.post(
       const user = await UserModel.findById(uuid);
       if (!user) {
         return res
-          .status(404)
+          .status(200)
           .json({ success: false, message: "USER_NOT_FOUND" });
       }
       const updateResponse = await UserModel.findByIdAndUpdate(uuid, { email });

@@ -15,12 +15,27 @@ import { SignupStyles } from "./SignupStyles";
 import { AntDesign } from "@expo/vector-icons";
 import SignupModel from "../../models/SignupModel";
 import { Feather } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { Signup } from "../../redux/UserReducer";
 
 const SignupScreen = ({ navigation }) => {
   const [role, setRole] = useState("user");
+  const dispatch = useDispatch();
   const [newUser, setNewUser] = useState(new SignupModel());
   const [dataPrivacyAgree, setDataPrivacyAgree] = useState("square");
   const [dataTosAgree, setDataTosAgree] = useState("square");
+
+  const TriggerSignup = () => {
+    setNewUser({
+      ...newUser,
+      account_type: "user",
+      isEmailVerified: false,
+      isPhoneVerified: false,
+    });
+    dispatch(Signup({ SignupData: newUser })).then((response) => {
+      console.log(response)
+    });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -203,7 +218,25 @@ const SignupScreen = ({ navigation }) => {
                 </Pressable>
                 <Pressable
                   style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
-                  onPress={() => {}}
+                  onPress={() => {
+                    if (
+                      !newUser.fullname ||
+                      !newUser.email ||
+                      !newUser.phoneNumber ||
+                      !newUser.password
+                    ) {
+                      Alert.alert("Please fill all fields.");
+                    } else if (
+                      dataPrivacyAgree !== "check-square" ||
+                      dataTosAgree !== "check-square"
+                    ) {
+                      Alert.alert(
+                        "Please you must agree to both the Data Privacy and Terms of Service"
+                      );
+                    } else {
+                      TriggerSignup(); // Assuming TriggerSignup is a defined function
+                    }
+                  }}
                 >
                   <View style={[SignupStyles.signup]}>
                     <Text

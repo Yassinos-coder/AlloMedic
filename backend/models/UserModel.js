@@ -5,10 +5,7 @@ const UserSchema = db.Schema({
     type: String,
     required: true,
   },
-  dob: {
-    type: String,
-    required: true,
-  },
+
   email: {
     type: String,
     required: true,

@@ -1,7 +1,6 @@
 class SignupModel {
   constructor(
     fullname,
-    dob,
     email,
     living_address,
     phoneNumber,
@@ -14,7 +13,6 @@ class SignupModel {
     price_of_responder
   ) {
     this.fullname = fullname;
-    this.dob = dob;
     this.email = email;
     this.living_address = living_address;
     this.phoneNumber = phoneNumber;
