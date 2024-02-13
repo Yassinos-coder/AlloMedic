@@ -30,12 +30,39 @@ export const SignupStyles = StyleSheet.create({
     borderRadius: 20,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems:"center"
+    alignItems: "center",
   },
   userRole: {
     width: 164,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
+  },
+  SignupInputsView: {
+    alignSelf: "center",
+    marginTop: 30,
+  },
+  Inputs: {
+    backgroundColor: "#F1F7FC",
+    color: "#999999",
+    fontSize: 14,
+    borderRadius: 15,
+    width: 343,
+    height: 50,
+    paddingLeft: 20,
+    marginBottom: 20,
+  },
+  agreements: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  signup: {
+    marginTop: 30,
+    width: 343,
+    height: 50,
+    backgroundColor: "#3A7DFF",
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
