@@ -17,8 +17,10 @@ import SignupModel from "../../models/SignupModel";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { Signup } from "../../redux/UserReducer";
+import { useNavigation } from "@react-navigation/native";
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = () => {
+  const navigation = useNavigation()
   const [role, setRole] = useState("user");
   const dispatch = useDispatch();
   const [newUser, setNewUser] = useState(new SignupModel());
@@ -26,14 +28,8 @@ const SignupScreen = ({ navigation }) => {
   const [dataTosAgree, setDataTosAgree] = useState("square");
 
   const TriggerSignup = () => {
-    setNewUser({
-      ...newUser,
-      account_type: "user",
-      isEmailVerified: false,
-      isPhoneVerified: false,
-    });
     dispatch(Signup({ SignupData: newUser })).then((response) => {
-      console.log(response)
+      console.log(response);
     });
   };
 
@@ -82,6 +78,8 @@ const SignupScreen = ({ navigation }) => {
                 } else {
                   setRole("user");
                 }
+
+                setNewUser("");
               }}
               accessible={true}
             >
@@ -112,6 +110,7 @@ const SignupScreen = ({ navigation }) => {
                 } else {
                   setRole("medic");
                 }
+                setNewUser("");
               }}
               accessible={true}
             >
@@ -138,19 +137,20 @@ const SignupScreen = ({ navigation }) => {
             </Pressable>
           </View>
           {role === "medic" ? (
-            <View style={SignupStyles.SignupInputsView}>
-              {/* Role is medic */}
-            </View>
-          ) : role === "user" ? (
             <>
               <View style={SignupStyles.SignupInputsView}>
-                {/* Role is user */}
                 <TextInput
                   style={SignupStyles.Inputs}
                   placeholder="Full Name"
                   value={newUser.fullname}
                   onChangeText={(text) =>
-                    setNewUser({ ...newUser, fullname: text })
+                    setNewUser({
+                      ...newUser,
+                      fullname: text,
+                      account_type: "medic",
+                      isEmailVerified: false,
+                      isPhoneVerified: false,
+                    })
                   }
                 />
                 <TextInput
@@ -166,6 +166,126 @@ const SignupScreen = ({ navigation }) => {
                   style={SignupStyles.Inputs}
                   placeholder="Ex: 0600000000"
                   value={newUser.phoneNumber}
+                  keyboardType="phone-pad"
+                  onChangeText={(text) =>
+                    setNewUser({ ...newUser, phoneNumber: text })
+                  }
+                />
+                <TextInput
+                  style={SignupStyles.Inputs}
+                  placeholder="Password"
+                  secureTextEntry={true}
+                  value={newUser.password}
+                  onChangeText={(text) =>
+                    setNewUser({ ...newUser, password: text })
+                  }
+                />
+                <Pressable
+                  onPress={() => {
+                    if (dataPrivacyAgree === "square") {
+                      setDataPrivacyAgree("check-square");
+                    } else {
+                      setDataPrivacyAgree("square");
+                    }
+                  }}
+                >
+                  <View style={SignupStyles.agreements}>
+                    <Feather name={dataPrivacyAgree} size={20} color="grey" />
+                    <Text
+                      style={{ width: 320, paddingLeft: 10, color: "grey" }}
+                    >
+                      J'accepte le traitement des données conformément à la loi
+                      LOI N° 09-08 relative à la protection des personnes
+                      physiques à l'égard du traitement des données à caractère
+                      personnel.
+                    </Text>
+                  </View>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    if (dataTosAgree === "square") {
+                      setDataTosAgree("check-square");
+                    } else {
+                      setDataTosAgree("square");
+                    }
+                  }}
+                >
+                  <View style={SignupStyles.agreements}>
+                    <Feather name={dataTosAgree} size={20} color="grey" />
+                    <Text style={{ paddingLeft: 10, color: "grey" }}>
+                      J'accepte les conditions d'utilisation.
+                    </Text>
+                  </View>
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
+                  onPress={() => {
+                    if (
+                      !newUser.fullname ||
+                      !newUser.email ||
+                      !newUser.phoneNumber ||
+                      !newUser.password
+                    ) {
+                      Alert.alert("Please fill all fields.");
+                    } else if (
+                      dataPrivacyAgree !== "check-square" ||
+                      dataTosAgree !== "check-square"
+                    ) {
+                      Alert.alert(
+                        "Please you must agree to both the Data Privacy and Terms of Service"
+                      );
+                    } else {
+                      TriggerSignup();
+                      navigation.navigate('DocsUpload')
+                    }
+                  }}
+                >
+                  <View style={[SignupStyles.signup]}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 16,
+                        fontFamily: "poppins",
+                      }}
+                    >
+                      Next
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            </>
+          ) : role === "user" ? (
+            <>
+              <View style={SignupStyles.SignupInputsView}>
+                {/* Role is user */}
+                <TextInput
+                  style={SignupStyles.Inputs}
+                  placeholder="Full Name"
+                  value={newUser.fullname}
+                  onChangeText={(text) =>
+                    setNewUser({
+                      ...newUser,
+                      fullname: text,
+                      account_type: "user",
+                      isEmailVerified: false,
+                      isPhoneVerified: false,
+                    })
+                  }
+                />
+                <TextInput
+                  style={SignupStyles.Inputs}
+                  placeholder="Email"
+                  value={newUser.email}
+                  keyboardType="email-address"
+                  onChangeText={(text) =>
+                    setNewUser({ ...newUser, email: text })
+                  }
+                />
+                <TextInput
+                  style={SignupStyles.Inputs}
+                  placeholder="Ex: 0600000000"
+                  value={newUser.phoneNumber}
+                  keyboardType="phone-pad"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, phoneNumber: text })
                   }

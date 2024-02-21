@@ -10,6 +10,10 @@ const UserSchema = db.Schema({
     type: String,
     required: true,
   },
+  cin: {
+    type: String,
+    required: false,
+  },
   living_address: {
     type: String,
     required: false,
