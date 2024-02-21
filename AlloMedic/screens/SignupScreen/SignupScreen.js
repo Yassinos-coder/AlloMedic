@@ -235,8 +235,8 @@ const SignupScreen = () => {
                         "Please you must agree to both the Data Privacy and Terms of Service"
                       );
                     } else {
-                      TriggerSignup();
-                      navigation.navigate('DocsUpload')
+                     // TriggerSignup(); deactivated signup only after upload of docs finish
+                      navigation.navigate('DocsUpload', {newUser})
                     }
                   }}
                 >
