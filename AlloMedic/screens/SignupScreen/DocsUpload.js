@@ -14,9 +14,9 @@ import { useDispatch } from "react-redux";
 import { Signup } from "../../redux/UserReducer";
 
 const DocsUpload = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const route = useRoute();
-  const [imageCIN, setImage] = useState([]);
+  const [imageCIN, setImageCIN] = useState([]);
   const [imageMedic, setImageMedic] = useState([]);
 
   const [newUser, setNewUser] = useState(route.params?.newUser);
@@ -34,9 +34,8 @@ const DocsUpload = () => {
       if (!pickResult.canceled) {
         // save image
         const newImages = pickResult.assets.map((asset) => asset.uri);
-        setImage((prevImages) => [...prevImages, ...newImages]);
+        setImageCIN((prevImages) => [...prevImages, ...newImages]);
         setNewUser((prevUser) => ({ ...prevUser, uploaded_docs: newImages }));
-        console.log(newUser);
       }
     } catch (error) {
       console.error("Error uploading images:", error);
@@ -61,7 +60,6 @@ const DocsUpload = () => {
           ...prevUser,
           uploaded_docs: [...prevUser.uploaded_docs, ...newImages],
         }));
-        console.log(newUser);
       }
     } catch (error) {
       console.error("Error uploading images:", error);
@@ -70,33 +68,30 @@ const DocsUpload = () => {
 
   const uploadAllDataToServer = async () => {
     try {
-      const formData = new FormData();
+      const newUserData = new FormData();
 
       // Append CIN images
       imageCIN.forEach((image, index) => {
-        formData.append("cinImages", {
+        newUserData.append("cinImages", {
           uri: image,
           type: "image/jpeg",
-          name: `cin_image_${index}.jpg`,
+          name: `${newUser.cin}_cin_${index}.jpg`,
         });
       });
 
       // Append Medic images
       imageMedic.forEach((image, index) => {
-        formData.append("medicImages", {
+        newUserData.append("MedicCredsImages", {
           uri: image,
           type: "image/jpeg",
-          name: `medic_image_${index}.jpg`,
+          name: `${newUser.cin}_medic_${index}.jpg`,
         });
       });
 
-      // Append user data
-      formData.append("userData", JSON.stringify(newUser));
+      // Append other data (assuming userData is an object)
+      newUserData.append("userData", JSON.stringify(newUser));
 
-      // Send formData to the server
-      dispatch(Signup({ SignupData: formData })).then((response) => {
-        console.log(response.data);
-      });
+      dispatch(Signup({ SignupData: newUserData }));
     } catch (error) {
       console.error("Error uploading data:", error);
     }

@@ -13,17 +13,16 @@ export const Signin = createAsyncThunk(
   }
 );
 
-export const Signup = createAsyncThunk(
-  "users/Signup",
-  async ({ SignupData }) => {
-    try {
-      const response = await AxiosDefault.post("/api/users/signup", SignupData);
-      return response.data;
-    } catch (err) {
-      console.warn(err);
-    }
+export const Signup = createAsyncThunk("users/Signup", async ({ SignupData }) => {
+  try {
+    const response = await AxiosDefault.post("/api/users/signup", SignupData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (err) {
+    console.error(err);
   }
-);
+});
 
 const UserReducer = createSlice({
   name: "UserReducer",
@@ -36,7 +35,7 @@ const UserReducer = createSlice({
   reducers: {
     setConnectionStatus: (state, action) => {
       state.isUserConnected = true;
-      console.log(state.isUserConnected)
+      console.log(state.isUserConnected);
     },
   },
   extraReducers: (builder) => {

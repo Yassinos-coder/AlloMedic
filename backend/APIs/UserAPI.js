@@ -6,20 +6,24 @@ const { SendSMS } = require("../utils/Twilio");
 const { generateToken, verifyToken } = require("../utils/JwtAuth");
 const userRouter = Router();
 const multer = require("multer");
+const path = require("path");
 
 const saltRounds = 10;
 
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Upload destination folder
+    cb(null, path.resolve(__dirname, "../uploads")); // Upload destination folder
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Keep the original filename
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 100 * 1024 * 1024 },
+});
 
 // PhoneNumber Verification Using Twilio
 userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
@@ -64,26 +68,24 @@ const validateSignup = [
 
 userRouter.post(
   "/api/users/signup",
+  upload.any(),
   validateSignup,
-  upload.array("cinImages", 2),
-  upload.array("medicImages", 2),
   async (req, res) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req.body.userData);
     if (!errors.isEmpty()) {
       return res.status(200).json({ success: false, errors: errors.array() });
     }
     try {
-      const newUser = req.body;
-      console.log(req.body);
+      const newUser = JSON.parse(req.body.userData);
       const doesUserExist = await UserModel.findOne({ email: newUser.email });
       if (doesUserExist) {
         return res
           .status(200)
           .json({ success: false, message: "USER_ALREADY_EXISTS" });
       }
-
       const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
       newUser.password = hashedPassword;
+      console.log(newUser);
       const saveNewUser = new UserModel(newUser);
       await saveNewUser.save();
       res.status(201).json({ success: true });
