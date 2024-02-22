@@ -10,8 +10,11 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { Signup } from "../../redux/UserReducer";
 
 const DocsUpload = () => {
+  const dispatch = useDispatch()
   const route = useRoute();
   const [imageCIN, setImage] = useState([]);
   const [imageMedic, setImageMedic] = useState([]);
@@ -54,11 +57,48 @@ const DocsUpload = () => {
         // save image
         const newImages = pickResult.assets.map((asset) => asset.uri);
         setImageMedic((prevImages) => [...prevImages, ...newImages]);
-        setNewUser((prevUser) => ({ ...prevUser, uploaded_docs: newImages }));
+        setNewUser((prevUser) => ({
+          ...prevUser,
+          uploaded_docs: [...prevUser.uploaded_docs, ...newImages],
+        }));
         console.log(newUser);
       }
     } catch (error) {
       console.error("Error uploading images:", error);
+    }
+  };
+
+  const uploadAllDataToServer = async () => {
+    try {
+      const formData = new FormData();
+
+      // Append CIN images
+      imageCIN.forEach((image, index) => {
+        formData.append("cinImages", {
+          uri: image,
+          type: "image/jpeg",
+          name: `cin_image_${index}.jpg`,
+        });
+      });
+
+      // Append Medic images
+      imageMedic.forEach((image, index) => {
+        formData.append("medicImages", {
+          uri: image,
+          type: "image/jpeg",
+          name: `medic_image_${index}.jpg`,
+        });
+      });
+
+      // Append user data
+      formData.append("userData", JSON.stringify(newUser));
+
+      // Send formData to the server
+      dispatch(Signup({ SignupData: formData })).then((response) => {
+        console.log(response.data);
+      });
+    } catch (error) {
+      console.error("Error uploading data:", error);
     }
   };
 
@@ -83,7 +123,10 @@ const DocsUpload = () => {
       </View>
       <Pressable onPress={() => uploadCINImages()}>
         <View style={styles.buttons}>
-          <Text style={styles.buttonText}> Image C.I.N </Text>
+          <Text style={styles.buttonText}>
+            {" "}
+            Selectionner les images de votre C.I.N{" "}
+          </Text>
         </View>
       </Pressable>
       <View style={styles.cinImages}>
@@ -96,7 +139,10 @@ const DocsUpload = () => {
       </Text>
       <Pressable onPress={() => uploadMEDICImages()}>
         <View style={styles.buttons}>
-          <Text style={styles.buttonText}> Button D'envoi </Text>
+          <Text style={styles.buttonText}>
+            {" "}
+            Selectionner les images pour envoyer{" "}
+          </Text>
         </View>
       </Pressable>
       <View style={styles.cinImages}>
@@ -104,6 +150,13 @@ const DocsUpload = () => {
           <Image key={index} source={{ uri: image }} style={styles.imageCard} />
         ))}
       </View>
+      <Pressable onPress={() => uploadAllDataToServer()}>
+        <View
+          style={[styles.buttons, { backgroundColor: "green", marginTop: 15 }]}
+        >
+          <Text style={styles.buttonText}> Terminer L'inscription </Text>
+        </View>
+      </Pressable>
     </SafeAreaView>
   );
 };

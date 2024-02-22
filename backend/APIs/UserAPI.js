@@ -5,8 +5,21 @@ const bcrypt = require("bcrypt");
 const { SendSMS } = require("../utils/Twilio");
 const { generateToken, verifyToken } = require("../utils/JwtAuth");
 const userRouter = Router();
+const multer = require("multer");
 
 const saltRounds = 10;
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Upload destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Keep the original filename
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // PhoneNumber Verification Using Twilio
 userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
@@ -49,31 +62,39 @@ const validateSignup = [
   // Add other validation rules for other fields as needed
 ];
 
-userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(200).json({ success: false, errors: errors.array() });
-  }
-  try {
-    const newUser = req.body;
-    console.log(req.body)
-    const doesUserExist = await UserModel.findOne({ email: newUser.email });
-    if (doesUserExist) {
-      return res
-        .status(200)
-        .json({ success: false, message: "USER_ALREADY_EXISTS" });
+userRouter.post(
+  "/api/users/signup",
+  validateSignup,
+  upload.array("cinImages", 2),
+  upload.array("medicImages", 2),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(200).json({ success: false, errors: errors.array() });
     }
+    try {
+      const newUser = req.body;
+      console.log(req.body);
+      const doesUserExist = await UserModel.findOne({ email: newUser.email });
+      if (doesUserExist) {
+        return res
+          .status(200)
+          .json({ success: false, message: "USER_ALREADY_EXISTS" });
+      }
 
-    const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
-    newUser.password = hashedPassword;
-    const saveNewUser = new UserModel(newUser);
-    await saveNewUser.save();
-    res.status(201).json({ success: true });
-  } catch (error) {
-    console.error("Error occurred during signup:", error);
-    res.status(200).json({ success: false, message: "Internal server error" });
+      const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
+      newUser.password = hashedPassword;
+      const saveNewUser = new UserModel(newUser);
+      await saveNewUser.save();
+      res.status(201).json({ success: true });
+    } catch (error) {
+      console.error("Error occurred during signup:", error);
+      res
+        .status(200)
+        .json({ success: false, message: "Internal server error" });
+    }
   }
-});
+);
 
 // User Signin
 userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
@@ -98,14 +119,12 @@ userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
     const token = generateToken(user._id);
     const userData = user.toObject();
     delete userData.password;
-    res
-      .status(200)
-      .json({
-        userData,
-        token,
-        success: true,
-        loginResult: passwordMatch,
-      });
+    res.status(200).json({
+      userData,
+      token,
+      success: true,
+      loginResult: passwordMatch,
+    });
   } catch (error) {
     console.error("Error occurred during signin:", error);
     res.status(200).json({ success: false, message: "Internal server error" });
