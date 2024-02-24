@@ -72,7 +72,7 @@ const DocsUpload = () => {
 
       // Append CIN images
       imageCIN.forEach((image, index) => {
-        newUserData.append("cinImages", {
+        newUserData.append("images", {
           uri: image,
           type: "image/jpeg",
           name: `${newUser.cin}_cin_${index}.jpg`,
@@ -81,7 +81,7 @@ const DocsUpload = () => {
 
       // Append Medic images
       imageMedic.forEach((image, index) => {
-        newUserData.append("MedicCredsImages", {
+        newUserData.append("images", {
           uri: image,
           type: "image/jpeg",
           name: `${newUser.cin}_medic_${index}.jpg`,

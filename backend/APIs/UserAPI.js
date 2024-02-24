@@ -5,25 +5,9 @@ const bcrypt = require("bcrypt");
 const { SendSMS } = require("../utils/Twilio");
 const { generateToken, verifyToken } = require("../utils/JwtAuth");
 const userRouter = Router();
-const multer = require("multer");
 const path = require("path");
-
+const fs = require("fs");
 const saltRounds = 10;
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, "../uploads")); // Upload destination folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Keep the original filename
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 },
-});
 
 // PhoneNumber Verification Using Twilio
 userRouter.post("/api/users/verifyPhone/:uuid", async (req, res) => {
@@ -66,37 +50,53 @@ const validateSignup = [
   // Add other validation rules for other fields as needed
 ];
 
-userRouter.post(
-  "/api/users/signup",
-  upload.any(),
-  validateSignup,
-  async (req, res) => {
-    const errors = validationResult(req.body.userData);
-    if (!errors.isEmpty()) {
-      return res.status(200).json({ success: false, errors: errors.array() });
-    }
-    try {
-      const newUser = JSON.parse(req.body.userData);
-      const doesUserExist = await UserModel.findOne({ email: newUser.email });
-      if (doesUserExist) {
-        return res
-          .status(200)
-          .json({ success: false, message: "USER_ALREADY_EXISTS" });
-      }
-      const hashedPassword = bcrypt.hashSync(newUser.password, saltRounds);
-      newUser.password = hashedPassword;
-      console.log(newUser);
-      const saveNewUser = new UserModel(newUser);
-      await saveNewUser.save();
-      res.status(201).json({ success: true });
-    } catch (error) {
-      console.error("Error occurred during signup:", error);
-      res
+const uploadPath = path.resolve(__dirname, `../uploads/`);
+
+userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
+  try {
+    // Access user data from the parsed FormData
+    const userData = JSON.parse(req.body.userData);
+
+    // Check if user exists
+    const doesUserExist = await UserModel.findOne({ email: userData.email });
+    if (doesUserExist) {
+      return res
         .status(200)
-        .json({ success: false, message: "Internal server error" });
+        .json({ success: false, message: "USER_ALREADY_EXISTS" });
     }
+
+    // Create directory to save user uploads
+    const userUploadPath = path.join(
+      uploadPath,
+      userData.fullname.replace(/\s+/g, "_")
+    );
+    fs.mkdirSync(userUploadPath, { recursive: true });
+
+    // Move uploaded files to user's upload directory
+    const filesOfUser = req.files.images;
+    if (Array.isArray(filesOfUser)) {
+      filesOfUser.forEach((file) => {
+        file.mv(path.join(userUploadPath, file.name));
+      });
+    } else {
+      filesOfUser.mv(path.join(userUploadPath, filesOfUser.name));
+    }
+
+    // Hash password
+    const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
+    userData.password = hashedPassword;
+
+    // Save new user
+    const saveNewUser = new UserModel(userData);
+    await saveNewUser.save();
+
+    // Respond with success
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error("Error occurred during signup:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-);
+});
 
 // User Signin
 userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
