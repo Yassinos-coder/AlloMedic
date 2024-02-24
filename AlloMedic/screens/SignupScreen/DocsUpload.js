@@ -7,13 +7,15 @@ import {
   TextInput,
   Pressable,
   Image,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { Signup } from "../../redux/UserReducer";
 
 const DocsUpload = () => {
+  const navigation = useNavigation()
   const dispatch = useDispatch();
   const route = useRoute();
   const [imageCIN, setImageCIN] = useState([]);
@@ -91,7 +93,17 @@ const DocsUpload = () => {
       // Append other data (assuming userData is an object)
       newUserData.append("userData", JSON.stringify(newUser));
 
-      dispatch(Signup({ SignupData: newUserData }));
+      dispatch(Signup({ SignupData: newUserData }))
+        .then((response) => {
+          if (response.payload.message === "USER_ALREADY_EXISTS" || !response.payload.success) {
+            Alert.alert("Utilisateur existe deja");
+          } else if (response.payload.message === "Internal server error" || !response.payload.success) {
+            Alert.alert("Erreur Interne Ressayer Plus tard");
+          } else if (response.payload.success) {
+            navigation.navigate('Signin')
+          }
+        })
+        .catch((err) => console.error(err.message));
     } catch (error) {
       console.error("Error uploading data:", error);
     }

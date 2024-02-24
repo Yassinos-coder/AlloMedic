@@ -15,7 +15,6 @@ export const Signin = createAsyncThunk(
 
 export const Signup = createAsyncThunk("users/Signup", async ({ SignupData }) => {
   try {
-    console.log(SignupData)
     const response = await AxiosDefault.post("/api/users/signup", SignupData, {
       headers: { "Content-Type": "multipart/form-data" },
     });

@@ -159,7 +159,7 @@ const SignupScreen = () => {
                   value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
-                    setNewUser({ ...newUser, email: text })
+                    setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
                   }
                 />
                 <TextInput
@@ -278,7 +278,7 @@ const SignupScreen = () => {
                   value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
-                    setNewUser({ ...newUser, email: text })
+                    setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
                   }
                 />
                 <TextInput
