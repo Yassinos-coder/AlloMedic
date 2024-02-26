@@ -1702,10 +1702,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@react-native-async-storage/async-storage@1.21.0":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.21.0.tgz#d7e370028e228ab84637016ceeb495878b7a44c8"
-  integrity sha512-JL0w36KuFHFCvnbOXRekqVAUplmOyT/OuCQkogo6X98MtpSaJOKEAeZnYO8JB0U/RIEixZaGI5px73YbRm/oag==
+"@react-native-async-storage/async-storage@1.22.2":
+  version "1.22.2"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.22.2.tgz#c6f966f02cc5602e5a768c32295e8009e897c28e"
+  integrity sha512-nZpzT4Wz1OkVdQaZP/awpDCTKiPzdmG0PYmRF37ZeJlfwlwOg55in0TP2YUOW0MhOCRiNMomWWLojDLv5j2OIw==
   dependencies:
     merge-options "^3.0.4"
 
