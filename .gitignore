@@ -3,15 +3,18 @@
 uiContent
 # Node modules
 /backend/uploads
-/AlloMedic/node_modules
 /backend/node_modules
 /backend/combined.log
 /backend/.env
+/backend/yarn.lock
+
 
 # Expo build artifacts
+/AlloMedic/node_modules
 /AlloMedic/.expo
 /AlloMedic/.expo-shared
 /AlloMedic/build
+/AlloMedic/yarn.lock
 
 # IDE files
 .idea
