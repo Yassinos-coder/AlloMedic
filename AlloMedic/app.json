@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Allo Medic",
-    "slug": "Allo Medic",
+    "slug": "allo-medic",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -20,7 +22,8 @@
         "NSPhotoLibraryAddUsageDescription": "We need access to your photo library to save pictures for medical purposes.",
         "NSPhotoLibraryUsageDescription": "We need access to your photo library to select pictures for medical purposes.",
         "NSNotificationsUsageDescription": "We need access to send and receive notifications for important updates."
-      }
+      },
+      "bundleIdentifier": "com.cds.AlloMedic"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,25 +31,35 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "VIBRATE"
-      ]
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.VIBRATE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.cds.AlloMedic"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-font"],
+      [
+        "expo-font"
+      ],
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bbbcee5d-2ce8-4e4d-9021-ff81f337f2da"
+      }
+    },
+    "owner": "yassinos"
   }
 }
