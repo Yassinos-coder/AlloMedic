@@ -7,6 +7,15 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {},
+    "base": {
+      "image": "latest"
+    },
+    "android": {
+      "buildType": "app-bundle"
+    }
+  },
+  "cli": {
+    "version": "^0.40.0"
   }
 }
