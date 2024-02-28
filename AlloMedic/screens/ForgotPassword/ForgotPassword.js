@@ -14,6 +14,10 @@ const ForgotPassword = () => {
     setIsFocused(false);
   };
 
+  const TriggerPasswordReset = () => {
+    
+  }
+
   return (
     <SafeAreaView style={ForgotPasswordStyle.container}>
       <View style={ForgotPasswordStyle.textBox}>

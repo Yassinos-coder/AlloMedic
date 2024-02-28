@@ -20,12 +20,13 @@ import { Signup } from "../../redux/UserReducer";
 import { useNavigation } from "@react-navigation/native";
 
 const SignupScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [role, setRole] = useState("user");
   const dispatch = useDispatch();
   const [newUser, setNewUser] = useState(new SignupModel());
   const [dataPrivacyAgree, setDataPrivacyAgree] = useState("square");
   const [dataTosAgree, setDataTosAgree] = useState("square");
+  const [isFocused, setFocus] = useState({});
 
   const TriggerSignup = () => {
     dispatch(Signup({ SignupData: newUser })).then((response) => {
@@ -80,6 +81,9 @@ const SignupScreen = () => {
                 }
 
                 setNewUser("");
+                setDataPrivacyAgree('square')
+                setDataTosAgree('square')
+                setFocus({})
               }}
               accessible={true}
             >
@@ -111,6 +115,9 @@ const SignupScreen = () => {
                   setRole("medic");
                 }
                 setNewUser("");
+                setDataPrivacyAgree('square')
+                setDataTosAgree('square')
+                setFocus({})
               }}
               accessible={true}
             >
@@ -140,7 +147,13 @@ const SignupScreen = () => {
             <>
               <View style={SignupStyles.SignupInputsView}>
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.fullname && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Full Name"
                   value={newUser.fullname}
                   onChangeText={(text) =>
@@ -152,33 +165,59 @@ const SignupScreen = () => {
                       isPhoneVerified: false,
                     })
                   }
+                  onFocus={() => setFocus({ ...isFocused, fullname: true })}
+                  onBlur={() => setFocus({ ...isFocused, fullname: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.email && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Email"
                   value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
                   }
+                  onFocus={() => setFocus({ ...isFocused, email: true })}
+                  onBlur={() => setFocus({ ...isFocused, email: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.phoneNumber && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Ex: 0600000000"
                   value={newUser.phoneNumber}
                   keyboardType="phone-pad"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, phoneNumber: text })
                   }
+                  onFocus={() => setFocus({ ...isFocused, phoneNumber: true })}
+                  onBlur={() => setFocus({ ...isFocused, phoneNumber: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.password && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Password"
                   secureTextEntry={true}
                   value={newUser.password}
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, password: text })
                   }
+                  onFocus={() => setFocus({ ...isFocused, password: true })}
+                  onBlur={() => setFocus({ ...isFocused, password: false })}
                 />
                 <Pressable
                   onPress={() => {
@@ -235,8 +274,8 @@ const SignupScreen = () => {
                         "Please you must agree to both the Data Privacy and Terms of Service"
                       );
                     } else {
-                     // TriggerSignup(); deactivated signup only after upload of docs finish
-                      navigation.navigate('DocsUpload', {newUser})
+                      // TriggerSignup(); deactivated signup only after upload of docs finish
+                      navigation.navigate("DocsUpload", { newUser });
                     }
                   }}
                 >
@@ -259,7 +298,13 @@ const SignupScreen = () => {
               <View style={SignupStyles.SignupInputsView}>
                 {/* Role is user */}
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.fullname && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Full Name"
                   value={newUser.fullname}
                   onChangeText={(text) =>
@@ -271,33 +316,59 @@ const SignupScreen = () => {
                       isPhoneVerified: false,
                     })
                   }
+                  onFocus={() => setFocus({ ...isFocused, fullname: true })}
+                  onBlur={() => setFocus({ ...isFocused, fullname: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.email && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Email"
                   value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
                   }
+                  onFocus={() => setFocus({ ...isFocused, email: true })}
+                  onBlur={() => setFocus({ ...isFocused, email: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.phoneNumber && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Ex: 0600000000"
                   value={newUser.phoneNumber}
                   keyboardType="phone-pad"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, phoneNumber: text })
                   }
+                  onFocus={() => setFocus({ ...isFocused, phoneNumber: true })}
+                  onBlur={() => setFocus({ ...isFocused, phoneNumber: false })}
                 />
                 <TextInput
-                  style={SignupStyles.Inputs}
+                  style={[
+                    SignupStyles.Inputs,
+                    isFocused.password && {
+                      borderColor: "#3A7DFF",
+                      borderWidth: 2,
+                    },
+                  ]}
                   placeholder="Password"
                   secureTextEntry={true}
                   value={newUser.password}
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, password: text })
                   }
+                  onFocus={() => setFocus({ ...isFocused, password: true })}
+                  onBlur={() => setFocus({ ...isFocused, password: false })}
                 />
                 <Pressable
                   onPress={() => {

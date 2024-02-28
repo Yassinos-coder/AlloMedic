@@ -23,6 +23,7 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState("square");
   const [loginData, setLoginData] = useState(new LoginModel());
+  const [isFocused, setFocus] = useState({})
 
   const SigninTrigger = () => {
     dispatch(Signin({ loginData: loginData }))
@@ -67,16 +68,18 @@ const LoginScreen = () => {
       <Text style={LoginStyles.loginText}> Sign in to your account </Text>
       <View style={LoginStyles.loginBox}>
         <TextInput
-          style={[LoginStyles.Inputs, { marginBottom: 20 }]}
+          style={[LoginStyles.Inputs, { marginBottom: 20 }, isFocused.email && {borderColor:'#3A7DFF', borderWidth: 2}]}
           placeholder="Email"
           keyboardType="email-address"
           value={loginData.email}
           onChangeText={(text) =>
             setLoginData({ ...loginData, email: text.toLowerCase() })
           }
+          onFocus={() => setFocus({...isFocused, email: true})}
+          onBlur={() => setFocus({...isFocused, email: false})}
         />
         <TextInput
-          style={LoginStyles.Inputs}
+          style={[LoginStyles.Inputs, isFocused.password && {borderColor:'#3A7DFF', borderWidth: 2}]}
           placeholder="Password"
           value={loginData.password}
           keyboardType="default"
@@ -84,6 +87,8 @@ const LoginScreen = () => {
           onChangeText={(text) =>
             setLoginData({ ...loginData, password: text })
           }
+          onFocus={() => setFocus({...isFocused, password: true})}
+          onBlur={() => setFocus({...isFocused, password: false})}
         />
         <View style={LoginStyles.belowPasswordAction}>
           <Pressable
