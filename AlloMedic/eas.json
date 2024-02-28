@@ -22,7 +22,6 @@
       }
     }
   },
-  "image": "default",
   "submit": {
     "production": {
       "android": {
