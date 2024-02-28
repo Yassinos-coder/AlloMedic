@@ -21,7 +21,7 @@ const DocsUpload = () => {
   const [imageCIN, setImageCIN] = useState([]);
   const [imageMedic, setImageMedic] = useState([]);
 
-  const [newUser, setNewUser] = useState(route.params?.newUser);
+  const [newUser, setNewUser] = useState(route.params?.newUser || { cin: '', uploaded_docs: [] });
 
   const uploadCINImages = async () => {
     try {
@@ -128,14 +128,14 @@ const DocsUpload = () => {
           }}
         />
       </View>
-      <Pressable onPress={() => uploadCINImages()}>
+      <Pressable onPress={() => uploadCINImages()} style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
         <View style={styles.buttons}>
           <Text style={styles.buttonText}>
             {" "}
             Selectionner les images de votre C.I.N{" "}
           </Text>
         </View>
-      </Pressable>
+      </Pressable >
       <View style={styles.cinImages}>
         {imageCIN.map((image, index) => (
           <Image key={index} source={{ uri: image }} style={styles.imageCard} />
@@ -144,7 +144,7 @@ const DocsUpload = () => {
       <Text style={styles.headerText}>
         Envoi De License, diplome ou certifications en medcine et infermerie :
       </Text>
-      <Pressable onPress={() => uploadMEDICImages()}>
+      <Pressable onPress={() => uploadMEDICImages()} style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
         <View style={styles.buttons}>
           <Text style={styles.buttonText}>
             {" "}
@@ -157,7 +157,7 @@ const DocsUpload = () => {
           <Image key={index} source={{ uri: image }} style={styles.imageCard} />
         ))}
       </View>
-      <Pressable onPress={() => uploadAllDataToServer()}>
+      <Pressable onPress={() => uploadAllDataToServer()} style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
         <View
           style={[styles.buttons, { backgroundColor: "green", marginTop: 15 }]}
         >

@@ -16,8 +16,10 @@ import LoginModel from "../../models/LoginModel";
 import { useDispatch } from "react-redux";
 import { Signin, setConnectionStatus } from "../../redux/UserReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState("square");
   const [loginData, setLoginData] = useState(new LoginModel());
@@ -100,7 +102,12 @@ const LoginScreen = ({ navigation }) => {
               <Text style={{ color: "grey", fontSize: 15 }}> Remember me</Text>
             </View>
           </Pressable>
-          <Pressable style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}>
+          <Pressable
+            style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
+            onPress={() => {
+              navigation.navigate("forgotPassword");
+            }}
+          >
             <View>
               <Text style={{ color: "#558FFE" }}>Forgot password ?</Text>
             </View>

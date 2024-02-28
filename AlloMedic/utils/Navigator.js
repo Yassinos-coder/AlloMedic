@@ -1,10 +1,13 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { DrawerActions, NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
 import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import SignupScreen from "../screens/SignupScreen/SignupScreen";
 import DocsUpload from "../screens/SignupScreen/DocsUpload";
+import ForgotPassword from "../screens/ForgotPassword/ForgotPassword";
+import { TouchableOpacity } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 const drawer = createDrawerNavigator();
 
@@ -18,11 +21,35 @@ const NonAuthNav = () => {
           drawerType: "front",
           drawerStatusBarAnimation: "slide",
         }}
-        backBehavior="order"
       >
         <drawer.Screen name="Signin" component={LoginScreen} />
         <drawer.Screen name="Signup" component={SignupScreen} />
         <drawer.Screen name="DocsUpload" component={DocsUpload} />
+        <drawer.Screen
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "Réinitialisation de mot de passe",
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(DrawerActions.toggleDrawer())
+                }
+              >
+                <AntDesign
+                  name="arrowleft"
+                  size={22}
+                  color="black"
+                  onPress={() => navigation.navigate('Signin')}
+                  accessibilityLabel="Go back"
+                  accessibilityRole="button"
+                  style={{marginLeft: 10}}
+                />
+              </TouchableOpacity>
+            ),
+          })}
+          name="forgotPassword"
+          component={ForgotPassword}
+        />
       </drawer.Navigator>
     </>
   );
