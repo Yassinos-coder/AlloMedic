@@ -24,6 +24,17 @@ export const Signup = createAsyncThunk("users/Signup", async ({ SignupData }) =>
   }
 });
 
+export const NormalSignup = createAsyncThunk("users/NormalSignup", async ({ SignupData }) => {
+  try {
+    const response = await AxiosDefault.post("/api/users/signupNormal", SignupData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 const UserReducer = createSlice({
   name: "UserReducer",
   initialState: {

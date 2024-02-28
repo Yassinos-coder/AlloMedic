@@ -98,6 +98,44 @@ userRouter.post("/api/users/signup", validateSignup, async (req, res) => {
   }
 });
 
+userRouter.post("/api/users/signupNormal", validateSignup, async (req, res) => {
+  try {
+    // Access user data from the parsed FormData
+    const userData = req.body
+
+    // Check if user exists
+    const doesUserExist = await UserModel.findOne({ email: userData.email });
+    if (doesUserExist) {
+      return res
+        .status(200)
+        .json({ success: false, message: "USER_ALREADY_EXISTS" });
+    }
+
+    // Create directory to save user uploads
+    const userUploadPath = path.join(
+      uploadPath,
+      userData.fullname.replace(/\s+/g, "_")
+    );
+    fs.mkdirSync(userUploadPath, { recursive: true });
+
+
+
+    // Hash password
+    const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
+    userData.password = hashedPassword;
+
+    // Save new user
+    const saveNewUser = new UserModel(userData);
+    await saveNewUser.save();
+
+    // Respond with success
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error("Error occurred during signup:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
 // User Signin
 userRouter.post("/api/users/signin", validateSignup, async (req, res) => {
   const errors = validationResult(req);

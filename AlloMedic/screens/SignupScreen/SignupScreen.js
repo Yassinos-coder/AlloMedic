@@ -16,7 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import SignupModel from "../../models/SignupModel";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import { Signup } from "../../redux/UserReducer";
+import { NormalSignup } from "../../redux/UserReducer";
 import { useNavigation } from "@react-navigation/native";
 
 const SignupScreen = () => {
@@ -29,7 +29,7 @@ const SignupScreen = () => {
   const [isFocused, setFocus] = useState({});
 
   const TriggerSignup = () => {
-    dispatch(Signup({ SignupData: newUser })).then((response) => {
+    dispatch(NormalSignup({ SignupData: newUser })).then((response) => {
       console.log(response);
     });
   };
@@ -155,7 +155,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Full Name"
-                  value={newUser.fullname}
                   onChangeText={(text) =>
                     setNewUser({
                       ...newUser,
@@ -177,7 +176,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Email"
-                  value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
@@ -194,7 +192,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Ex: 0600000000"
-                  value={newUser.phoneNumber}
                   keyboardType="phone-pad"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, phoneNumber: text })
@@ -212,7 +209,6 @@ const SignupScreen = () => {
                   ]}
                   placeholder="Password"
                   secureTextEntry={true}
-                  value={newUser.password}
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, password: text })
                   }
@@ -306,7 +302,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Full Name"
-                  value={newUser.fullname}
                   onChangeText={(text) =>
                     setNewUser({
                       ...newUser,
@@ -328,7 +323,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Email"
-                  value={newUser.email}
                   keyboardType="email-address"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, email: text.toLocaleLowerCase() })
@@ -345,7 +339,6 @@ const SignupScreen = () => {
                     },
                   ]}
                   placeholder="Ex: 0600000000"
-                  value={newUser.phoneNumber}
                   keyboardType="phone-pad"
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, phoneNumber: text })
@@ -363,7 +356,6 @@ const SignupScreen = () => {
                   ]}
                   placeholder="Password"
                   secureTextEntry={true}
-                  value={newUser.password}
                   onChangeText={(text) =>
                     setNewUser({ ...newUser, password: text })
                   }
