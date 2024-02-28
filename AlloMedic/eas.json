@@ -7,40 +7,24 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "development",
-        "artifactType": "apk"
-      },
-      "ios": {
-        "buildType": "development",
-        "artifactType": "ipa"
+        "buildType": "apk"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "preview",
-        "artifactType": "apk"
-      },
-      "ios": {
-        "buildType": "preview",
-        "artifactType": "ipa"
+        "buildType": "apk"
       }
     },
     "production": {
       "android": {
-        "buildType": "release",
-        "artifactType": "apk"
-      },
-      "ios": {
-        "buildType": "release",
-        "artifactType": "ipa"
+        "buildType": "apk"
       }
     }
   },
   "submit": {
     "production": {
       "android": {
-        "store": "play-store",
         "track": "internal"
       }
     }
