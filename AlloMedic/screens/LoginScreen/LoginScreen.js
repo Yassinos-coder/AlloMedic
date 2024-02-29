@@ -31,7 +31,6 @@ const LoginScreen = () => {
     dispatch(Signin({ loginData: loginData }))
       .then(async (response) => {
         if (!response.payload.loginResult) {
-          console.log(response);
           switch (response.payload.message) {
             case "INVALID_CREDENTIALS":
               Alert.alert("Password or User doesn't exist!");
@@ -44,7 +43,6 @@ const LoginScreen = () => {
           }
         } else {
           dispatch(setConnectionStatus());
-          console.log(response.payload);
           await AsyncStorage.setItem("tokenKey", response.payload.token);
           await AsyncStorage.setItem(
             "userLoggedIn",
@@ -54,6 +52,7 @@ const LoginScreen = () => {
             "userData",
             JSON.stringify(response.payload.userData)
           );
+          navigation.navigate('HomeScreen')
         }
       })
       .catch((err) => {
@@ -96,7 +95,7 @@ const LoginScreen = () => {
             isFocused.password && { borderColor: "#3A7DFF", borderWidth: 2 },
           ]}
           placeholder="Password"
-          keyboardType="default"
+          keyboardType="ascii-capable"
           secureTextEntry={true}
           onChangeText={(text) =>
             setLoginData({ ...loginData, password: text })

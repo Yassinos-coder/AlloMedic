@@ -8,6 +8,7 @@ import DocsUpload from "../screens/SignupScreen/DocsUpload";
 import ForgotPassword from "../screens/ForgotPassword/ForgotPassword";
 import { TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import HomeScreen from "../screens/HomeScreen/HomeScreen";
 
 const drawer = createDrawerNavigator();
 
@@ -61,10 +62,36 @@ const AuthNav = () => {
       <drawer.Navigator
         initialRouteName="Signin"
         screenOptions={{ headerShown: false }}
-        backBehavior="order"
       >
         <drawer.Screen name="Signin" component={LoginScreen} />
         <drawer.Screen name="Signup" component={SignupScreen} />
+        <drawer.Screen name="HomeScreen" component={HomeScreen} />
+
+        <drawer.Screen
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "Réinitialisation de mot de passe",
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(DrawerActions.toggleDrawer())
+                }
+              >
+                <AntDesign
+                  name="arrowleft"
+                  size={22}
+                  color="black"
+                  onPress={() => navigation.navigate('Signin')}
+                  accessibilityLabel="Go back"
+                  accessibilityRole="button"
+                  style={{marginLeft: 10}}
+                />
+              </TouchableOpacity>
+            ),
+          })}
+          name="forgotPassword"
+          component={ForgotPassword}
+        />
       </drawer.Navigator>
     </>
   );
