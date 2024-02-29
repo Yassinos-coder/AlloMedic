@@ -8,6 +8,12 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
+  "author": "Yassine Castro aka Yassinos-Coder",
+  "email": "castroyassine0@Gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yassinos-coder/AlloMedic.git"
+  },
   "dependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",

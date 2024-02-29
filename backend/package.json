@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Back end server for AlloMedic Mobile App run by Express",
   "main": "core.js",
-  "repository": "https://github.com/Yassinos-coder/AlloMedic.git",
-  "author": "Yassinos <castroyassine0@gmail.com>",
+  "author": "Yassine Castro aka Yassinos-Coder",
+  "email": "castroyassine0@Gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yassinos-coder/AlloMedic.git"
+  },
   "license": "MIT",
   "private": true,
   "dependencies": {
