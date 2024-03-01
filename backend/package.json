@@ -22,7 +22,6 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.0",
-    "newrelic": "^11.10.4",
     "nodemailer": "^6.9.10",
     "twilio": "^4.21.0"
   }
