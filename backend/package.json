@@ -24,7 +24,6 @@
     "mongoose": "^8.2.0",
     "newrelic": "^11.10.4",
     "nodemailer": "^6.9.10",
-    "nodemon": "3.1.0",
     "twilio": "^4.21.0"
   }
 }
