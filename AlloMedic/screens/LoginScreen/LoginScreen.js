@@ -18,6 +18,8 @@ import { Signin, setConnectionStatus } from "../../redux/UserReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
+import * as LocalAuthentication from "expo-local-authentication";
+import AlertComponent from "../../utils/AlertComponent";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -26,6 +28,26 @@ const LoginScreen = () => {
   const [loginData, setLoginData] = useState(new LoginModel());
   const [isFocused, setFocus] = useState({});
   const isLoading = useSelector((state) => state.userHandler.status);
+  // Alerts State
+  const [alertWp, setalertWp] = useState(false); // Invalid Credentials
+  const [alertIS, setalertIS] = useState(false); // Internal Server Error
+  const [alertEF, setalertEF] = useState(false); // Empty Fields
+
+  const authenticate = async () => {
+    try {
+      const { success } = await LocalAuthentication.authenticateAsync();
+
+      if (success) {
+        // Biometric authentication successful, navigate to the main screen or perform other actions
+        console.log("Authentication successful");
+      } else {
+        // Biometric authentication failed or was canceled by the user
+        console.log("Authentication failed");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+    }
+  };
 
   const SigninTrigger = () => {
     dispatch(Signin({ loginData: loginData }))
@@ -33,13 +55,24 @@ const LoginScreen = () => {
         if (!response.payload.loginResult) {
           switch (response.payload.message) {
             case "INVALID_CREDENTIALS":
-              Alert.alert("Password or User doesn't exist!");
+              // Alert.alert("Password or User doesn't exist!");
+              setalertWp(true);
+              setTimeout(() => {
+                setalertWp(false)
+              }, 2500);
               break;
             case "Internal server error":
-              Alert.alert("Internal Error, Try Again!");
+              // Alert.alert("Internal Error, Try Again!");
+              setalertIS(true);
+              setTimeout(() => {
+                setalertIS(false)
+              }, 2500);
               break;
             default:
-              Alert.alert("An error occurred, please try again later!");
+              setalertIS(true);
+              setTimeout(() => {
+                setalertIS(false)
+              }, 2500);
           }
         } else {
           dispatch(setConnectionStatus());
@@ -52,7 +85,7 @@ const LoginScreen = () => {
             "userData",
             JSON.stringify(response.payload.userData)
           );
-          navigation.navigate('HomeScreen')
+          navigation.navigate("HomeScreen");
         }
       })
       .catch((err) => {
@@ -61,6 +94,22 @@ const LoginScreen = () => {
   };
   return (
     <SafeAreaView style={LoginStyles.container}>
+      <AlertComponent
+        alertType="danger"
+        alertMsg="E-mail/Mot de Passe Incorrect"
+        isVisible={alertWp}
+      />
+      <AlertComponent
+        alertType="error"
+        alertMsg="Erreur du serveur, veuillez réessayer plus tard"
+        isVisible={alertIS}
+      />
+      <AlertComponent
+        alertType="info"
+        alertMsg="Veuillez remplir tous les champs"
+        isVisible={alertEF}
+      />
+
       <StatusBar backgroundColor="#fff" barStyle={"dark-content"} />
       <Image
         style={LoginStyles.loginImage}
@@ -105,7 +154,11 @@ const LoginScreen = () => {
           returnKeyType="done" // Set returnKeyType to "done" for the last input field
           onSubmitEditing={() => {
             if (loginData.email === "" || loginData.password === "") {
-              Alert.alert("Fields cannot be empty!");
+              // Alert.alert("Fields cannot be empty!");
+              setalertEF(true);
+              setTimeout(() => {
+                setalertEF(false)
+              }, 2500);
             } else {
               SigninTrigger();
             }
@@ -145,7 +198,11 @@ const LoginScreen = () => {
           style={({ pressed }) => [pressed ? { opacity: 0.5 } : {}]}
           onPress={() => {
             if (loginData.email === "" || loginData.password === "") {
-              Alert.alert("Fields cannot be empty!");
+              // Alert.alert("Fields cannot be empty!");
+              setalertEF(true);
+              setTimeout(() => {
+                setalertEF(false);
+              }, 2500);
             } else {
               SigninTrigger();
             }
