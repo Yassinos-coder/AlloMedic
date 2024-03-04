@@ -6,11 +6,35 @@ import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import SignupScreen from "../screens/SignupScreen/SignupScreen";
 import DocsUpload from "../screens/SignupScreen/DocsUpload";
 import ForgotPassword from "../screens/ForgotPassword/ForgotPassword";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
+import "react-native-gesture-handler";
 
 const drawer = createDrawerNavigator();
+
+// Custom Drawer Content Component
+const CustomDrawerContent = ({ navigation }) => {
+  const navigateToScreen = (screenName) => () => {
+    navigation.navigate(screenName);
+  };
+  const userData = useSelector((state) => state.userHandler.userData);
+
+  return (
+    <View style={{}}>
+      <View style={{ backgroundColor: "#EEEEEE", width: "100%", height: 90 }}>
+        <Text> {userData.fullname ? userData.fullname : 'Session Null'}  </Text>
+      </View>
+      <TouchableOpacity onPress={navigateToScreen("Screen1")}>
+        <Text>Screen 1</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={navigateToScreen("Screen2")}>
+        <Text>Screen 2</Text>
+      </TouchableOpacity>
+      {/* Add more items as needed */}
+    </View>
+  );
+};
 
 const NonAuthNav = () => {
   return (
@@ -22,6 +46,7 @@ const NonAuthNav = () => {
           drawerType: "front",
           drawerStatusBarAnimation: "slide",
         }}
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <drawer.Screen name="Signin" component={LoginScreen} />
         <drawer.Screen name="Signup" component={SignupScreen} />
@@ -40,10 +65,10 @@ const NonAuthNav = () => {
                   name="arrowleft"
                   size={22}
                   color="black"
-                  onPress={() => navigation.navigate('Signin')}
+                  onPress={() => navigation.navigate("Signin")}
                   accessibilityLabel="Go back"
                   accessibilityRole="button"
-                  style={{marginLeft: 10}}
+                  style={{ marginLeft: 10 }}
                 />
               </TouchableOpacity>
             ),
@@ -62,6 +87,7 @@ const AuthNav = () => {
       <drawer.Navigator
         initialRouteName="Signin"
         screenOptions={{ headerShown: false }}
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <drawer.Screen name="Signin" component={LoginScreen} />
         <drawer.Screen name="Signup" component={SignupScreen} />
@@ -81,10 +107,10 @@ const AuthNav = () => {
                   name="arrowleft"
                   size={22}
                   color="black"
-                  onPress={() => navigation.navigate('Signin')}
+                  onPress={() => navigation.navigate("Signin")}
                   accessibilityLabel="Go back"
                   accessibilityRole="button"
-                  style={{marginLeft: 10}}
+                  style={{ marginLeft: 10 }}
                 />
               </TouchableOpacity>
             ),

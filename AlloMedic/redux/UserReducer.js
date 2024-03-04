@@ -38,10 +38,10 @@ export const NormalSignup = createAsyncThunk("users/NormalSignup", async ({ Sign
 const UserReducer = createSlice({
   name: "UserReducer",
   initialState: {
-    userData: null,
-    isUserConnected: null,
-    status: null,
-    error: null,
+    userData: {},
+    isUserConnected: '',
+    status: '',
+    error: '',
   },
   reducers: {
     setConnectionStatus: (state, action) => {
