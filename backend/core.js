@@ -5,6 +5,12 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 
 const fileUpload = require("express-fileupload");
+const io = require('@pm2/io')
+
+io.init({
+  transactions: true, // will enable the transaction tracing
+  http: true // will enable metrics about the http server (optional)
+})
 
 const app = express();
 app.use(cors());
