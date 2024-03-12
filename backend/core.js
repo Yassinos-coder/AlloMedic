@@ -5,12 +5,12 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 
 const fileUpload = require("express-fileupload");
-const io = require('@pm2/io')
+const io = require("@pm2/io");
 
 io.init({
   transactions: true, // will enable the transaction tracing
   http: true, // will enable metrics about the http server (optional)
-})
+});
 
 const app = express();
 app.use(cors());
@@ -59,6 +59,43 @@ app.use((err, req, res, next) => {
 app.listen(process.env.BACK_END, () =>
   console.log(`Server Created Succesfuly on port ${process.env.BACK_END}`)
 );
+
+app.get("/", async (req, res) => {
+  res.send(
+    "<!DOCTYPE html>" +
+      '<html lang="en">' +
+      "<head>" +
+      '<meta charset="UTF-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+      "<title>Allo Medic Backend Server</title>" +
+      "<style>" +
+      "body {" +
+      'font-family: "Courier New", Courier, monospace;' +
+      "text-align: center;" +
+      "background-color: #f0f0f0;" +
+      "color: #333;" +
+      "}" +
+      "h1 {" +
+      'font-family: "Comic Sans MS", cursive, sans-serif;' +
+      "font-size: 36px;" +
+      "color: #ff4500;" +
+      "margin-top: 50px;" +
+      "}" +
+      "h2 {" +
+      'font-family: "Comic Sans MS", cursive, sans-serif;' +
+      "font-size: 24px;" +
+      "color: #0000ff;" +
+      "margin-top: 20px;" +
+      "}" +
+      "</style>" +
+      "</head>" +
+      "<body>" +
+      "<h1>Allo Medic Backend Server</h1>" +
+      "<h2>Get outta here dumbass</h2>" +
+      "</body>" +
+      "</html>"
+  );
+});
 
 /* API ROUTERS IMPORT */
 const UserAPI = require("./APIs/UserAPI");
