@@ -1,19 +1,23 @@
 import React from "react";
-import { DrawerActions, NavigationContainer } from "@react-navigation/native";
+import {
+  DrawerActions,
+  NavigationContainer,
+  useNavigation,
+} from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
 import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import SignupScreen from "../screens/SignupScreen/SignupScreen";
 import DocsUpload from "../screens/SignupScreen/DocsUpload";
 import ForgotPassword from "../screens/ForgotPassword/ForgotPassword";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import "react-native-gesture-handler";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const drawer = createDrawerNavigator();
 
-// Custom Drawer Content Component
 const CustomDrawerContent = ({ navigation }) => {
   const navigateToScreen = (screenName) => () => {
     navigation.navigate(screenName);
@@ -21,105 +25,141 @@ const CustomDrawerContent = ({ navigation }) => {
   const userData = useSelector((state) => state.userHandler.userData);
 
   return (
-    <View style={{}}>
-      <View style={{ backgroundColor: "#EEEEEE", width: "100%", height: 90 }}>
-        <Text> {userData.fullname ? userData.fullname : 'Session Null'}  </Text>
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          backgroundColor: "#EEEEEE",
+          width: "100%",
+          height: 90,
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          source={require("../assets/images/nopp.png")}
+          style={{ resizeMode: "contain", width: 80, height: 80 }}
+        />
+        <Text style={{ padding: 20, fontSize: 18 }}>
+          {" "}
+          {userData.fullname ? userData.fullname : "Session Null"}{" "}
+        </Text>
       </View>
-      <TouchableOpacity onPress={navigateToScreen("Screen1")}>
-        <Text>Screen 1</Text>
+      <TouchableOpacity
+        onPress={navigateToScreen("Screen1")}
+        style={{ height: 50, justifyContent: "center" }}
+      >
+        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={navigateToScreen("Screen2")}>
-        <Text>Screen 2</Text>
+      <TouchableOpacity
+        onPress={navigateToScreen("Screen1")}
+        style={{ height: 50, justifyContent: "center" }}
+      >
+        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Profile</Text>
       </TouchableOpacity>
-      {/* Add more items as needed */}
+      <TouchableOpacity
+        onPress={navigateToScreen("Screen1")}
+        style={{ height: 50, justifyContent: "center" }}
+      >
+        <Text style={{ fontSize: 16, paddingLeft: 10 }}>App Settings</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={navigateToScreen("Screen1")}
+        style={{ height: 50, justifyContent: "center" }}
+      >
+        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Report Bug</Text>
+      </TouchableOpacity>
+      <View style={{ flex: 1 }} />
+      <TouchableOpacity
+        onPress={navigateToScreen("Screen1")}
+        style={{
+          height: 50,
+          justifyContent: "center",
+        }}
+      >
+        <View style={{ paddingLeft: 10, flexDirection: "row" }}>
+          <MaterialIcons name="logout" size={24} color="black" />
+          <Text style={{ paddingLeft: 10, fontSize: 16 }}>Se Deconnecter</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const NonAuthNav = () => {
   return (
-    <>
-      <drawer.Navigator
-        initialRouteName="Signin"
-        screenOptions={{
-          headerShown: false,
-          drawerType: "front",
-          drawerStatusBarAnimation: "slide",
-        }}
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-      >
-        <drawer.Screen name="Signin" component={LoginScreen} />
-        <drawer.Screen name="Signup" component={SignupScreen} />
-        <drawer.Screen name="DocsUpload" component={DocsUpload} />
-        <drawer.Screen
-          options={({ navigation }) => ({
-            headerShown: true,
-            title: "Réinitialisation de mot de passe",
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              >
-                <AntDesign
-                  name="arrowleft"
-                  size={22}
-                  color="black"
-                  onPress={() => navigation.navigate("Signin")}
-                  accessibilityLabel="Go back"
-                  accessibilityRole="button"
-                  style={{ marginLeft: 10 }}
-                />
-              </TouchableOpacity>
-            ),
-          })}
-          name="forgotPassword"
-          component={ForgotPassword}
-        />
-      </drawer.Navigator>
-    </>
+    <drawer.Navigator
+      initialRouteName="Signin"
+      screenOptions={{
+        headerShown: false,
+        drawerType: "front",
+        drawerStatusBarAnimation: "slide",
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <drawer.Screen name="Signin" component={LoginScreen} />
+      <drawer.Screen name="Signup" component={SignupScreen} />
+      <drawer.Screen name="DocsUpload" component={DocsUpload} />
+      <drawer.Screen
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: "Réinitialisation de mot de passe",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+            >
+              <AntDesign
+                name="arrowleft"
+                size={22}
+                color="black"
+                onPress={() => navigation.navigate("Signin")}
+                accessibilityLabel="Go back"
+                accessibilityRole="button"
+                style={{ marginLeft: 10 }}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        name="forgotPassword"
+        component={ForgotPassword}
+      />
+    </drawer.Navigator>
   );
 };
 
 const AuthNav = () => {
   return (
-    <>
-      <drawer.Navigator
-        initialRouteName="Signin"
-        screenOptions={{ headerShown: false }}
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-      >
-        <drawer.Screen name="Signin" component={LoginScreen} />
-        <drawer.Screen name="Signup" component={SignupScreen} />
-        <drawer.Screen name="HomeScreen" component={HomeScreen} />
+    <drawer.Navigator
+      initialRouteName="Signin"
+      screenOptions={{ headerShown: false }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <drawer.Screen name="Signin" component={LoginScreen} />
+      <drawer.Screen name="Signup" component={SignupScreen} />
+      <drawer.Screen name="HomeScreen" component={HomeScreen} />
 
-        <drawer.Screen
-          options={({ navigation }) => ({
-            headerShown: true,
-            title: "Réinitialisation de mot de passe",
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              >
-                <AntDesign
-                  name="arrowleft"
-                  size={22}
-                  color="black"
-                  onPress={() => navigation.navigate("Signin")}
-                  accessibilityLabel="Go back"
-                  accessibilityRole="button"
-                  style={{ marginLeft: 10 }}
-                />
-              </TouchableOpacity>
-            ),
-          })}
-          name="forgotPassword"
-          component={ForgotPassword}
-        />
-      </drawer.Navigator>
-    </>
+      <drawer.Screen
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: "Réinitialisation de mot de passe",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+            >
+              <AntDesign
+                name="arrowleft"
+                size={22}
+                color="black"
+                onPress={() => navigation.navigate("Signin")}
+                accessibilityLabel="Go back"
+                accessibilityRole="button"
+                style={{ marginLeft: 10 }}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        name="forgotPassword"
+        component={ForgotPassword}
+      />
+    </drawer.Navigator>
   );
 };
 

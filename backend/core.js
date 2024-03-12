@@ -13,22 +13,31 @@ io.init({
 });
 
 const app = express();
-app.use(cors());
+
+// Enable CORS with restrictions (replace '*' with allowed origins if needed)
+app.use(cors({ origin: '*' }));  // Adjust allowed origins for better security
+
 app.use(express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB
     useTempFiles: true,
     tempFileDir: "/tmp/",
   })
 );
+
 /* HELMET FOR HEADERS SECURITY */
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-eval'", "https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"], // Adjust script sources based on your needs
+      imgSrc: ["'self'", "data:"], // Allow data URIs for inline images
+      styleSrc: ["'self'", "'unsafe-inline'"], // Consider stricter style source restrictions
+      fontSrc: ["'self'", "https://fonts.googleapis.com/"], // Adjust font sources based on your needs
+      connectSrc: ["'self'", "https://your-api-domain.com"], // Replace with your API domain if applicable
     },
   })
 );
@@ -52,14 +61,20 @@ mongoose
     console.warn("Database connection error:", error.message);
   });
 
+// Global error handling middleware (generic for now)
 app.use((err, req, res, next) => {
-  res.status(500).send("Something went wrong!");
+  console.error(err.stack); // Log the error for debugging
+  res.status(500).send("Internal Server Error");
 });
+
+/* Security Note:
+ * Consider implementing more specific error handling for different error types
+ * to provide informative feedback to the client without revealing sensitive details.
+ */
 
 app.listen(process.env.BACK_END, () =>
   console.log(`Server Created Succesfuly on port ${process.env.BACK_END}`)
 );
-
 app.get("/", async (req, res) => {
   res.send(
     "<!DOCTYPE html>" +
