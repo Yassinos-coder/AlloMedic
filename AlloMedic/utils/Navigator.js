@@ -10,7 +10,7 @@ import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import SignupScreen from "../screens/SignupScreen/SignupScreen";
 import DocsUpload from "../screens/SignupScreen/DocsUpload";
 import ForgotPassword from "../screens/ForgotPassword/ForgotPassword";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import "react-native-gesture-handler";
@@ -44,45 +44,92 @@ const CustomDrawerContent = ({ navigation }) => {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={navigateToScreen("Screen1")}
-        style={{ height: 50, justifyContent: "center" }}
+        onPress={navigateToScreen("HomeScreen")}
+        style={[
+          DrawerStyle.itemStyle,
+          {
+            height: 50,
+            justifyContent: "center",
+          },
+        ]}
       >
-        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Home</Text>
+        <Text style={{ fontSize: 16, paddingLeft: 10, color: "white" }}>
+          Home
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={navigateToScreen("Screen1")}
-        style={{ height: 50, justifyContent: "center" }}
+        onPress={navigateToScreen("Profile")}
+        style={[
+          DrawerStyle.itemStyle,
+          {
+            height: 50,
+            justifyContent: "center",
+          },
+        ]}
       >
-        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Profile</Text>
+        <Text style={{ fontSize: 16, paddingLeft: 10, color: "white" }}>
+          Profile
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={navigateToScreen("Screen1")}
-        style={{ height: 50, justifyContent: "center" }}
+        onPress={navigateToScreen("AppSettings")}
+        style={[
+          DrawerStyle.itemStyle,
+          {
+            height: 50,
+            justifyContent: "center",
+          },
+        ]}
       >
-        <Text style={{ fontSize: 16, paddingLeft: 10 }}>App Settings</Text>
+        <Text style={{ fontSize: 16, paddingLeft: 10, color: "white" }}>
+          App Settings
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={navigateToScreen("Screen1")}
-        style={{ height: 50, justifyContent: "center" }}
+        onPress={navigateToScreen("ReportBug")}
+        style={[
+          DrawerStyle.itemStyle,
+          {
+            height: 50,
+            justifyContent: "center",
+          },
+        ]}
       >
-        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Report Bug</Text>
+        <Text style={{ fontSize: 16, paddingLeft: 10, color: "white" }}>
+          Report Bug
+        </Text>
       </TouchableOpacity>
       <View style={{ flex: 1 }} />
       <TouchableOpacity
         onPress={navigateToScreen("Screen1")}
-        style={{
-          height: 50,
-          justifyContent: "center",
-        }}
+        style={[
+          {
+            height: 50,
+            justifyContent: "center",
+            backgroundColor: "red",
+          },
+        ]}
       >
         <View style={{ paddingLeft: 10, flexDirection: "row" }}>
-          <MaterialIcons name="logout" size={24} color="black" />
-          <Text style={{ paddingLeft: 10, fontSize: 16 }}>Se Deconnecter</Text>
+          <MaterialIcons name="logout" size={24} color="white" />
+          <Text style={{ paddingLeft: 10, fontSize: 16, color: "white" }}>
+            Se Deconnecter
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
   );
 };
+
+const DrawerStyle = StyleSheet.create({
+  itemStyle: {
+    backgroundColor: "grey",
+    width: 250,
+    marginTop: 10,
+    alignSelf: "center",
+    borderRadius: 10,
+  },
+});
 
 const NonAuthNav = () => {
   return (
