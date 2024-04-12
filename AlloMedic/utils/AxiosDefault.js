@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const tokenKey = "tokenKey";
 
-axios.defaults.baseURL = "http://192.168.3.194:8009";
+axios.defaults.baseURL = "http://192.168.3.3:8009";
 
 const AxiosDefault = axios.create();
 
