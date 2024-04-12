@@ -15,6 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
+import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
 
 const drawer = createDrawerNavigator();
 
@@ -58,7 +59,7 @@ const CustomDrawerContent = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={navigateToScreen("Profile")}
+        onPress={navigateToScreen("ProfileScreen")}
         style={[
           DrawerStyle.itemStyle,
           {
@@ -182,7 +183,7 @@ const AuthNav = () => {
       <drawer.Screen name="Signin" component={LoginScreen} />
       <drawer.Screen name="Signup" component={SignupScreen} />
       <drawer.Screen name="HomeScreen" component={HomeScreen} />
-
+      <drawer.Screen name="ProfileScreen" component={ProfileScreen} />
       <drawer.Screen
         options={({ navigation }) => ({
           headerShown: true,
