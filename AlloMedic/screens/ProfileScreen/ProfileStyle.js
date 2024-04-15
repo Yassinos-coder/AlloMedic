@@ -27,5 +27,11 @@ export const ProfileStyles = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     alignSelf: "center",
+    justifyContent: "center",
+  },
+  userAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
   },
 });

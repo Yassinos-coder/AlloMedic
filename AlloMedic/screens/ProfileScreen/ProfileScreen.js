@@ -24,6 +24,7 @@ const ProfileScreen = () => {
       </View>
       <View style={ProfileStyles.profileData}>
         <Image
+        style={ProfileStyles.userAvatar}
           source={
             userData && userData.avatar
               ? {
