@@ -1,13 +1,24 @@
 import { StyleSheet } from "react-native";
 
+const COLORS = {
+  white: "#FFF",
+  lightGray: "#F9F9F9",
+  red: "red",
+};
+
+const DIMENSIONS = {
+  borderRadius: 10,
+};
+
 export const ProfileStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
+    gap: 30
   },
   header: {
     flexDirection: "row",
-    margin: 20,
+    margin: 10,
   },
   BackArrow: {
     width: 50,
@@ -22,16 +33,48 @@ export const ProfileStyles = StyleSheet.create({
     padding: 8,
   },
   profileData: {
-    backgroundColor: "#EEEEEE",
+    backgroundColor: COLORS.lightGray,
     width: 343,
     height: 100,
-    borderRadius: 10,
+    borderRadius: DIMENSIONS.borderRadius,
     alignSelf: "center",
+    flexDirection: "row",
+    gap: 15,
+  },
+  userAvatarContainer: {
     justifyContent: "center",
   },
   userAvatar: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 50,
+    marginLeft: 15,
+  },
+  userInfoContainer: {
+    justifyContent: "center",
+  },
+  editButtonContainer: {
+    justifyContent: "center",
+  },
+  button: {
+    backgroundColor: "#3A7DFF",
+    borderRadius: 12,
+    width: 63,
+    height: 30,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 12,
+    textAlign: "center",
+    margin: 5,
+    fontWeight: "500",
+  },
+  profilePanel: {
+    width: 343,
+    height: 216,
+    borderRadius: DIMENSIONS.borderRadius,
+    backgroundColor: COLORS.lightGray,
+    alignSelf: "center",
+
   },
 });

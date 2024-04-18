@@ -23,17 +23,34 @@ const ProfileScreen = () => {
         <Text style={ProfileStyles.textHeader}>Profile</Text>
       </View>
       <View style={ProfileStyles.profileData}>
-        <Image
-        style={ProfileStyles.userAvatar}
-          source={
-            userData && userData.avatar
-              ? {
-                  uri: `https://192.168.3.3:8009/uploads/${userData.fullname}/profilePic.png`,
-                }
-              : require("../../assets/images/nopp.png")
-          }
-        />
+        <View style={ProfileStyles.userAvatarContainer}>
+          <Image
+            style={ProfileStyles.userAvatar}
+            source={
+              userData && userData.avatar
+                ? {
+                    uri: `https://192.168.3.3:8009/uploads/${userData.fullname}/profilePic.png`,
+                  }
+                : require("../../assets/images/nopp.png")
+            }
+          />
+        </View>
+
+        <View style={ProfileStyles.userInfoContainer}>
+          <Text style={{ fontSize: 16 }}>{userData.fullname || "Erreur"}</Text>
+          <Text style={{ fontSize: 12, color: "#999999" }}>
+            {userData.email || "Erreur"}
+          </Text>
+        </View>
+        <View style={ProfileStyles.editButtonContainer}>
+          <Pressable>
+            <View style={ProfileStyles.button}>
+              <Text style={ProfileStyles.buttonText}>Edit</Text>
+            </View>
+          </Pressable>
+        </View>
       </View>
+      <View style={ProfileStyles.profilePanel}></View>
     </SafeAreaView>
   );
 };
