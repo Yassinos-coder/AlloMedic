@@ -14,7 +14,7 @@ export const ProfileStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    gap: 30
+    gap: 30,
   },
   header: {
     flexDirection: "row",
@@ -75,6 +75,20 @@ export const ProfileStyles = StyleSheet.create({
     borderRadius: DIMENSIONS.borderRadius,
     backgroundColor: COLORS.lightGray,
     alignSelf: "center",
-
+  },
+  panelOptions: {
+    width: 313,
+    height: 30,
+    flexDirection: "row",
+    gap: 15,
+    marginLeft: 15,
+    padding: 5,
+  },
+  buttonDA: {
+    width: 330,
+    height: 50,
+    alignSelf: "center",
+    flexDirection: "row",
+    backgroundColor: "#EE3737",
   },
 });
