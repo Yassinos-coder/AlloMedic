@@ -1,0 +1,54 @@
+# General Node.js & NPM
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment Variables
+.env
+.env.*    # Any other env files, such as .env.local, .env.development, etc.
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Build and Cache Directories
+Server/dist/
+Server/build/
+App/.expo/
+App/.expo-shared/
+App/.cache/
+App/.next/
+App/out/
+App/web-build/
+App/android/
+App/ios/
+
+# Sensitive Files and Configurations
+Server/keys/
+Server/config.js
+Server/*.pem   # If using SSL certs
+Server/private_key.pem
+App/google-services.json   # Android config for Firebase (if used)
+App/GoogleService-Info.plist   # iOS config for Firebase (if used)
+
+# Images and Uploads
+Server/uploads/
+
+# Expo Specific
+App/*.jks   # Keystore files for Android
+App/expo-service-account.json   # Expo service account key
+App/App_Resources/   # Any custom resources like splash screens
+
+# Temporary Files
+Server/temp/
+Server/tmp/
+App/temp/
+App/tmp/
+App/*.lock   # Temporary lock files
+
+# IDE/Editor Configurations
+.vscode/
+.idea/
+.DS_Store
+*.swp
