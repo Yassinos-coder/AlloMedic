@@ -20,6 +20,7 @@ const mongoose = require("mongoose");
 const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const hpp = require("hpp");
+const Routes = require('./Routes/Routes')
 
 // Initialize express app
 const app = express();
@@ -81,6 +82,8 @@ connectDB(); // Call the database connection function
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
+
+app.use('/server/api/v1', Routes)
 
 // Define a catch-all route for undefined routes
 app.use((req, res) => {
