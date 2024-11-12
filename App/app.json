@@ -1,13 +1,14 @@
 {
   "expo": {
     "name": "App",
-    "slug": "App",
+    "slug": "allomedic",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,6 +23,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9bfe6d06-155d-4b84-b384-5c02717ce34e"
+      }
+    },
+    "owner": "yassinos"
   }
 }
