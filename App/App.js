@@ -1,22 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Constants from 'expo-constants';
+import 'react-native-gesture-handler';
+import { ActivityIndicator, View, Text } from 'react-native'; // Added Text import
+import * as Fonts from 'expo-font';
+import * as SecureStore from 'expo-secure-store'; // Added SecureStore import
+import { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
+import Store from './redux/Store';
+import PrivateScreens from './utils/PrivateScreens';
+
+const LoadFonts = () => {
+  return Fonts.loadAsync({
+    'poppins-regular': require('./assets/fonts/Poppins-Regular.ttf'),
+    'poppins-extrabold': require('./assets/fonts/Poppins-ExtraBold.ttf'),
+    'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
+    'poppins-semibold': require('./assets/fonts/Poppins-SemiBold.ttf'),
+    'poppins-italic': require('./assets/fonts/Poppins-Italic.ttf'),
+  });
+};
 
 export default function App() {
-  console.log(Constants.expoConfig.extra.DECRYPTION_KEY)
+  const [FontLoaded, setFontLoaded] = useState(false);
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      const isSignedIn = await SecureStore.getItemAsync('isSignedIn');
+      if (!isSignedIn) {
+        await SecureStore.setItemAsync('isSignedIn', 'false');
+      }
+
+      await LoadFonts();
+      setFontLoaded(true);
+    };
+
+    initializeApp();
+  }, []);
+
+  if (!FontLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={Store}>
+      <PrivateScreens />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

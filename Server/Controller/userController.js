@@ -29,8 +29,9 @@ exports.signup = async (req, res) => {
             const encryptedResponse = EncryptData({
                 userData: isSaved,
                 tokenKey: token,
+                message: 'USER_CREATED_SUCCESS'
             })
-            res.status(200).json({ encryptedData: encryptedResponse, message: 'USER_CREATED_SUCCESS' })
+            res.status(200).json({ encryptedData: encryptedResponse })
         }
 
     } catch (err) {
@@ -40,31 +41,29 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
     try {
-        let userCredentials = req.body
-
-        const UserFromDB = await UserModel.findOne({ email: userCredentials.email })
+        let userCredentials = req.body;
+        const UserFromDB = await UserModel.findOne({ email: userCredentials.email });
         if (UserFromDB) {
-            // checking password
-            const result = bcrypt.compareSync(userCredentials.password, UserFromDB.password)
+            const result = bcrypt.compareSync(userCredentials.password, UserFromDB.password);
             if (result) {
                 const { _id, email, fullname, role, is_verified_user } = UserFromDB;
                 const token = await tokenSigner({ _id, email, fullname, role, is_verified_user });
                 const encryptedResponse = EncryptData({
                     userData: { _id, email, fullname, role, is_verified_user },
-                    tokenKey: token
-                })
-                res.status(200).json({ encryptedResponse, message: 'LOGIN_SUCCESS' })
+                    tokenKey: token,
+                    message: 'LOGIN_SUCCESS'
+                });
+                res.status(200).json({ encryptedResponse });
             } else {
-                res.status(500).json({ message: 'WRONG_PASSWORD' })
+                res.status(401).json({ message: 'WRONG_PASSWORD' });
             }
         } else {
-            res.status(500).json({ message: 'SOMETHING_WENT_WRONG' })
+            res.status(404).json({ message: 'USER_NOT_FOUND' });
         }
-
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: err.message });
     }
-}
+};
 
 exports.SendVerifyEmail = async (req, res) => {
     try {

@@ -30,6 +30,10 @@ const UserSchema = db.Schema({
         type: String,
         required: false,
         default:'none'
+    },
+    create_at: {
+        type: Date,
+        required: false
     }
 
 })
