@@ -28,9 +28,12 @@ const UserReducer = createSlice({
     initialState: {
         userData: null,
         error: null,
-        status: null
+        status: null,
+        isSignedIn: null
     },
-    reducers: {},
+    reducers: {
+        
+    },
     extraReducers: (builder) => {
         builder
             .addCase(CreateAccount.fulfilled, (state, action) => {

@@ -7,42 +7,36 @@ import AuthScreen from '../Screens/AuthScreen/AuthScreen';
 import ProfileScreen from '../Screens/ProfileScreen/ProfileScreen';
 import WelcomingScreen from '../Screens/WelcomingScreen/WelcomingScreen';
 
-
-const Drawer = createDrawerNavigator()
-
-
+const Drawer = createDrawerNavigator();
 
 const PrivateScreens = () => {
-    const [isSigned, setIsSigned] = useState(false)
+    const [isSigned, setIsSigned] = useState(false);
+
     useEffect(() => {
-        let StoredConnectionStatus = SecureStore.getItemAsync('isSignedIn')
-        if (StoredConnectionStatus === 'true') {
-            setIsSigned(true)
-        } else {
-            setIsSigned(false)
-        }
-    }, [])
+        const checkSignInStatus = async () => {
+            const StoredConnectionStatus = await SecureStore.getItemAsync('isSignedIn');
+            setIsSigned(StoredConnectionStatus === 'true');
+        };
+        checkSignInStatus();
+    }, []);
 
     return (
         <NavigationContainer>
             {
-                !isSigned ?
-                    (<>
-                        <Drawer.Navigator>
-                            <Drawer.Screen name="WelcomeScreen" component={WelcomingScreen} options={{ headerShown: false }} />
-                            <Drawer.Screen name="Authentification" component={AuthScreen} options={{ headerShown: false }} />
-                        </Drawer.Navigator>
-                    </>)
-                    :
-                    (<>
-                        <Drawer.Navigator>
-                            <Drawer.Screen name="Home" component={HomeScreen} />
-                            <Drawer.Screen name="Profile" component={ProfileScreen} />
-                        </Drawer.Navigator>
-                    </>)
+                !isSigned ? (
+                    <Drawer.Navigator initialRouteName="WelcomeScreen">
+                        <Drawer.Screen name="WelcomeScreen" component={WelcomingScreen} options={{ headerShown: false }} />
+                        <Drawer.Screen name="Authentification" component={AuthScreen} options={{ headerShown: false }} />
+                    </Drawer.Navigator>
+                ) : (
+                    <Drawer.Navigator initialRouteName="Home">
+                        <Drawer.Screen name="Home" component={HomeScreen} />
+                        <Drawer.Screen name="Profile" component={ProfileScreen} />
+                    </Drawer.Navigator>
+                )
             }
         </NavigationContainer>
-    )
-}
+    );
+};
 
-export default PrivateScreens
+export default PrivateScreens;

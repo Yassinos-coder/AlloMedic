@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Button, Input } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { Signin } from '../../redux/UserReducer';
+import * as SecureStore from 'expo-secure-store'
 
 
 const AuthScreen = () => {
@@ -19,9 +20,15 @@ const AuthScreen = () => {
 
     const Login = () => {
         dispatch(Signin({ userCredentials })).then((response) => {
-            
-        }).catch(err => console.error(err.message))
-    }
+            if (response.payload && response.payload.message === 'LOGIN_SUCCESS') {
+                SecureStore.setItemAsync('isSignedIn', 'true');
+                SecureStore.setItemAsync('jwtToken', response.payload.tokenKey);
+                navigation.navigate('Home');
+            } else {
+                console.error('Login failed or response was not successful.');
+            }
+        }).catch(err => console.error(`Login error: ${err.message}`));
+    };
     return (
         <SafeAreaView style={AuthStyles.container}>
             {
