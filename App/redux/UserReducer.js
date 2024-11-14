@@ -29,10 +29,8 @@ const UserReducer = createSlice({
         userData: null,
         error: null,
         status: null,
-        isSignedIn: null
     },
     reducers: {
-        
     },
     extraReducers: (builder) => {
         builder
