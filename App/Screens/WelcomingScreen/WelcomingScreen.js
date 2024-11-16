@@ -19,6 +19,7 @@ const WelcomingScreen = () => {
                     onPress={(value) => {
                         setSelectedIndex(value);
                         const mode = value === 0 ? 'signup' : 'signin';
+                        console.log(mode)
                         navigation.navigate('Authentification', { mode });
                     }}
                     containerStyle={{ marginBottom: 20 }}

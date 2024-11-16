@@ -14,7 +14,8 @@ exports.signup = async (req, res) => {
             res.status(200).json({ message: 'USER_EXISTS' })
             return 'USER_EXISTS'
         }
-
+        // To lowerCase
+        newUser.email = newUser.email.toLowerCase();
         // Hashing password 
         const salt = bcrypt.genSaltSync(saltRounds)
         const hashedpassword = bcrypt.hashSync(newUser.password, salt)
@@ -42,6 +43,7 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         let userCredentials = req.body;
+        userCredentials.email = userCredentials.email.toLowerCase();
         const UserFromDB = await UserModel.findOne({ email: userCredentials.email });
         if (UserFromDB) {
             const result = bcrypt.compareSync(userCredentials.password, UserFromDB.password);

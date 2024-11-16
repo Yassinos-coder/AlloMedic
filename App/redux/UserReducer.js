@@ -29,8 +29,15 @@ const UserReducer = createSlice({
         userData: null,
         error: null,
         status: null,
+        isSigned: null
     },
     reducers: {
+        logIn(state) {
+            state.isSigned = true; // Set isSigned to true
+        },
+        logOut(state) {
+            state.isSigned = false; // Set isSigned to false
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -59,5 +66,6 @@ const UserReducer = createSlice({
     }
 });
 
-
+export const { logIn, logOut } = UserReducer.actions;
 export default UserReducer.reducer
+
