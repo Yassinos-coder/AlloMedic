@@ -3,9 +3,10 @@ import { ActivityIndicator, View, Text } from 'react-native'; // Added Text impo
 import * as Fonts from 'expo-font';
 import * as SecureStore from 'expo-secure-store'; // Added SecureStore import
 import { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import Store from './redux/Store';
 import PrivateScreens from './utils/PrivateScreens';
+
 
 const LoadFonts = () => {
   return Fonts.loadAsync({
@@ -22,11 +23,6 @@ export default function App() {
 
   useEffect(() => {
     const initializeApp = async () => {
-      const isSignedIn = await SecureStore.getItemAsync('isSignedIn');
-      if (!isSignedIn) {
-        await SecureStore.setItemAsync('isSignedIn', 'false');
-      }
-
       await LoadFonts();
       setFontLoaded(true);
     };
@@ -35,7 +31,7 @@ export default function App() {
   }, []);
 
   if (!FontLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff"/>;
+    return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (

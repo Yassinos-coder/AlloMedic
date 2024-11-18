@@ -29,10 +29,13 @@ const UserReducer = createSlice({
         userData: null,
         error: null,
         status: null,
-        isLoggedIn: false
+        isLoggedIn: false,
+        userGPSLocation: null
     },
     reducers: {
-       
+       setUserLocation(state, action) {
+        state.userGPSLocation = action.payload
+       }
     },
     extraReducers: (builder) => {
         builder
@@ -63,6 +66,6 @@ const UserReducer = createSlice({
     }
 });
 
-export const { } = UserReducer.actions;
+export const { setUserLocation } = UserReducer.actions;
 export default UserReducer.reducer
 
