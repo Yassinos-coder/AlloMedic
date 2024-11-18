@@ -20,7 +20,7 @@ const WelcomingScreen = () => {
                         setSelectedIndex(value);
                         const mode = value === 0 ? 'signup' : 'signin';
                         console.log(mode)
-                        navigation.navigate('Authentification', { mode });
+                        navigation.navigate('AuthScreen', { mode });
                     }}
                     containerStyle={{ marginBottom: 20 }}
                 />

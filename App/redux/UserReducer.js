@@ -29,20 +29,21 @@ const UserReducer = createSlice({
         userData: null,
         error: null,
         status: null,
-        isSigned: null
+        isLoggedIn: false
     },
     reducers: {
-        logIn(state) {
-            state.isSigned = true; // Set isSigned to true
-        },
-        logOut(state) {
-            state.isSigned = false; // Set isSigned to false
-        },
+        // logIn(state) {
+        //     state.isSigned = true; // Set isSigned to true
+        // },
+        // logOut(state) {
+        //     state.isSigned = false; // Set isSigned to false
+        // },
     },
     extraReducers: (builder) => {
         builder
             .addCase(CreateAccount.fulfilled, (state, action) => {
                 state.userData = action.payload.userData;
+
                 state.status = "fulfilled";
             })
             .addCase(CreateAccount.pending, (state) => {
@@ -54,6 +55,7 @@ const UserReducer = createSlice({
             })
             .addCase(Signin.fulfilled, (state, action) => {
                 state.userData = action.payload;
+                state.isLoggedIn = action.payload.message === 'LOGIN_SUCCESS' ? true : false
                 state.status = "fulfilled";
             })
             .addCase(Signin.pending, (state) => {
@@ -66,6 +68,6 @@ const UserReducer = createSlice({
     }
 });
 
-export const { logIn, logOut } = UserReducer.actions;
+export const { } = UserReducer.actions;
 export default UserReducer.reducer
 

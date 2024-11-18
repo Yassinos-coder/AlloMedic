@@ -35,7 +35,7 @@ export default function App() {
   }, []);
 
   if (!FontLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color="#0000ff"/>;
   }
 
   return (
