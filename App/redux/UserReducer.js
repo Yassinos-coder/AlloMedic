@@ -32,12 +32,7 @@ const UserReducer = createSlice({
         isLoggedIn: false
     },
     reducers: {
-        // logIn(state) {
-        //     state.isSigned = true; // Set isSigned to true
-        // },
-        // logOut(state) {
-        //     state.isSigned = false; // Set isSigned to false
-        // },
+       
     },
     extraReducers: (builder) => {
         builder
