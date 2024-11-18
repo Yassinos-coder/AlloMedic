@@ -12,19 +12,20 @@ const Drawer = createDrawerNavigator();
 
 const PrivateScreens = () => {
   const isLoggedIn = useSelector((state) => state.UserReducer.isLoggedIn);
+  const isLoggedInSecureStore = SecureStore.getItemAsync('isLoggedInSecureStore') ? SecureStore.getItemAsync('isLoggedInSecureStore') : isLoggedIn
 
   return (
     <NavigationContainer>
       <Drawer.Navigator>
-        <Drawer.Screen name="AuthScreen" component={AuthScreen} />
-        {isLoggedIn && (
+        <Drawer.Screen name="AuthScreen" component={AuthScreen} options={{headerShown: false}}/>
+        {isLoggedIn || isLoggedInSecureStore === 'true' && (
           <>
             <Drawer.Screen name="HomeScreen" component={HomeScreen} />
             <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
           </>
         )}
-        {!isLoggedIn && (
-          <Drawer.Screen name="WelcomingScreen" component={WelcomingScreen} />
+        {!isLoggedIn || isLoggedInSecureStore === 'false' && (
+          <Drawer.Screen name="WelcomingScreen" component={WelcomingScreen} options={{headerShown: false}}/>
         )}
       </Drawer.Navigator>
     </NavigationContainer>
