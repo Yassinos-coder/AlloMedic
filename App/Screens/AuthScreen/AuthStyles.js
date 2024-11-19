@@ -20,7 +20,19 @@ const AuthStyles = StyleSheet.create({
     title: {
         fontSize: 18,
         padding: 30
-    }
+    },
+    signup: {
+        flex: 1,               // Take up the full height of the container
+        justifyContent: 'center', // Center vertically
+        alignItems: 'center',     // Center horizontally
+    },
+    subSignup: {
+        justifyContent: 'center', // Center vertically
+        alignItems: 'center',     // Center horizontally
+        backgroundColor: 'white',
+        width: 350,
+        borderRadius: 20
+    },
 })
 
 export default AuthStyles

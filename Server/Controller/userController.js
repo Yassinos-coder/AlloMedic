@@ -9,6 +9,7 @@ const saltRounds = 10;
 exports.signup = async (req, res) => {
     try {
         let newUser = req.body
+        console.log(newUser)
         const doesUserExist = await UserModel.findOne({ email: newUser.email })
         if (doesUserExist) {
             res.status(200).json({ message: 'USER_EXISTS' })
@@ -32,10 +33,11 @@ exports.signup = async (req, res) => {
                 tokenKey: token,
                 message: 'USER_CREATED_SUCCESS'
             })
-            res.status(200).json({ encryptedData: encryptedResponse })
+            res.status(200).json({ encryptedResponse })
         }
 
     } catch (err) {
+        console.error(err.message)
         res.status(500).json({ message: err.message })
     }
 }

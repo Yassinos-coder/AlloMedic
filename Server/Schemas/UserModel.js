@@ -2,11 +2,11 @@ const db = require('mongoose')
 
 const UserSchema = db.Schema({
 
-    fullname : {
+    fullname: {
         type: String,
         required: true
     },
-    email : {
+    email: {
         type: String,
         required: true
     },
@@ -24,12 +24,13 @@ const UserSchema = db.Schema({
     },
     is_verified_user: {
         type: Boolean,
-        required: true
+        required: false,
+        default: false
     },
     payment_method: {
         type: String,
         required: false,
-        default:'none'
+        default: 'none'
     },
     create_at: {
         type: Date,

@@ -5,7 +5,8 @@ import { DecryptData } from "../utils/DataDecrypter";
 export const CreateAccount = createAsyncThunk('user/CreateAccount', async ({ newUser }) => {
     try {
         const response = await AxiosDefault.post('/signup', newUser)
-        let decryptedData = await DecryptData(response.data)
+        let decryptedData = await DecryptData(response.data.encryptedResponse)
+        console.log(decryptedData)
         return decryptedData;
     } catch (err) {
         console.error(`Error in CreateAccount ${err.message}`)
@@ -40,8 +41,7 @@ const UserReducer = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(CreateAccount.fulfilled, (state, action) => {
-                state.userData = action.payload.userData;
-
+                state.userData = action.payload;
                 state.status = "fulfilled";
             })
             .addCase(CreateAccount.pending, (state) => {

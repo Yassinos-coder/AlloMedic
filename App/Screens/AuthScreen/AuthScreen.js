@@ -5,7 +5,7 @@ import AuthStyles from './AuthStyles';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Button, ButtonGroup, Input } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-import { Signin } from '../../redux/UserReducer';
+import { CreateAccount, Signin } from '../../redux/UserReducer';
 import * as SecureStore from 'expo-secure-store';
 import UserObject from '../../Models/UserObject'
 
@@ -16,10 +16,10 @@ const AuthScreen = () => {
     const isPending = useSelector((state) => state.UserReducer.status)
     const [newUser, setNewUser] = useState(new UserObject())
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [mode, setMode] = useState(route.params?.mode || 'signin')
 
 
-    // Default mode to 'signin' if null or undefined
-    const mode = route.params?.mode || 'signin';
+
 
     const [userCredentials, setUserCredentials] = useState({});
 
@@ -39,6 +39,9 @@ const AuthScreen = () => {
 
     const Signup = () => {
         console.log(newUser)
+        dispatch(CreateAccount({ newUser })).then((response) => {
+
+        }).catch(err => console.error(err.message))
     }
 
 
@@ -144,6 +147,23 @@ const AuthScreen = () => {
                                     marginVertical: 10,
                                 }}
                                 onPress={() => Login()}
+                            />
+                            <Button
+                                title="Creer un compte"
+                                loading={false}
+                                loadingProps={{ size: 'small', color: 'white' }}
+                                buttonStyle={{
+                                    backgroundColor: 'rgba(111, 202, 186, 1)',
+                                    borderRadius: 5,
+                                }}
+                                titleStyle={{ fontWeight: 'bold', fontSize: 20 }}
+                                containerStyle={{
+                                    marginHorizontal: 50,
+                                    height: 50,
+                                    width: 200,
+                                    marginVertical: 10,
+                                }}
+                                onPress={() => setMode('signup')}
                             />
                         </View>
                     </View>
