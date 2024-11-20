@@ -14,14 +14,14 @@ const AuthScreen = () => {
     const route = useRoute();
     const navigation = useNavigation()
     const isPending = useSelector((state) => state.UserReducer.status)
+    const userData = useSelector((state) => state.UserReducer.userData)
     const [newUser, setNewUser] = useState(new UserObject())
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [mode, setMode] = useState(route.params?.mode || 'signin')
-
-
-
-
     const [userCredentials, setUserCredentials] = useState({});
+
+
+
 
     const Login = () => {
         dispatch(Signin({ userCredentials }))
@@ -52,6 +52,7 @@ const AuthScreen = () => {
                     <View style={AuthStyles.signup}>
                         <View style={AuthStyles.subSignup}>
                             <Text style={AuthStyles.title}>Authentification | Creation de compte</Text>
+
                             <Input
                                 placeholder="Entrez votre nom complet"
                                 onChangeText={(text) => {
@@ -117,6 +118,7 @@ const AuthScreen = () => {
                     <View style={AuthStyles.signin}>
                         <View style={AuthStyles.subSignin}>
                             <Text style={AuthStyles.title}>Authentification | Connexion</Text>
+                            <Text style={[{ color: 'red' }, userData.message === 'WRONG_PASSWORD' ? {} : { display: 'none' }]}> Mot de passe erroné </Text>
                             <Input
                                 placeholder="Entrez votre adresse mail"
                                 onChangeText={(text) => {

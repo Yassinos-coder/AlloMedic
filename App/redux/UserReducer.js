@@ -6,7 +6,6 @@ export const CreateAccount = createAsyncThunk('user/CreateAccount', async ({ new
     try {
         const response = await AxiosDefault.post('/signup', newUser)
         let decryptedData = await DecryptData(response.data.encryptedResponse)
-        console.log(decryptedData)
         return decryptedData;
     } catch (err) {
         console.error(`Error in CreateAccount ${err.message}`)
@@ -27,7 +26,7 @@ export const Signin = createAsyncThunk('user/Signin', async ({ userCredentials }
 const UserReducer = createSlice({
     name: 'UserReducer',
     initialState: {
-        userData: null,
+        userData: {},
         error: null,
         status: null,
         isLoggedIn: false,

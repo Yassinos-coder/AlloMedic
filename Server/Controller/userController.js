@@ -59,13 +59,16 @@ exports.signin = async (req, res) => {
                 });
                 res.status(200).json({ encryptedResponse });
             } else {
-                res.status(401).json({ message: 'WRONG_PASSWORD' });
+                const encryptedResponse = EncryptData({
+                    message: 'WRONG_PASSWORD'
+                });
+                res.status(200).json({ encryptedResponse });
             }
         } else {
-            res.status(404).json({ message: 'USER_NOT_FOUND' });
+            res.status(200).json({ message: 'USER_NOT_FOUND' });
         }
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(200).json({ message: err.message });
     }
 };
 
