@@ -3,7 +3,6 @@ import * as SecureStore from 'expo-secure-store';
 
 // Backend URL
 const backendUrl = process.env.EXPO_PUBLIC_API_URL; // Replace with your actual backend URL
-
 // Function to get the JWT token from Secure Store
 const getJwtToken = async () => {
   try {
