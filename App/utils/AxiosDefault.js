@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 // Backend URL
-const backendUrl = 'http://192.168.3.13:8009/server/api/v1'; // Replace with your actual backend URL
+const backendUrl = process.env.EXPO_PUBLIC_API_URL; // Replace with your actual backend URL
 
 // Function to get the JWT token from Secure Store
 const getJwtToken = async () => {

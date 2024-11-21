@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 
 export const DecryptData = (data) => {
-    var bytes = CryptoJS.AES.decrypt(data, '9adf1e4f7a12c5eb8bd83a87b1234567e1749b3a0f43d69aef15c9ed02e5a83f');
+    var bytes = CryptoJS.AES.decrypt(data, process.env.DECRYPTION_KEY);
     var decryptedString = bytes.toString(CryptoJS.enc.Utf8);
 
     if (!decryptedString) {
@@ -15,6 +15,6 @@ export const DecryptData = (data) => {
 }
 
 export const EncryptData = (data) => {
-    let DataEncrypted = CryptoJS.AES.encrypt(JSON.stringify(data), '9adf1e4f7a12c5eb8bd83a87b1234567e1749b3a0f43d69aef15c9ed02e5a83f').toString();
+    let DataEncrypted = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.DECRYPTION_KEY).toString();
     return DataEncrypted
 } 

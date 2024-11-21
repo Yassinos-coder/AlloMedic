@@ -1,18 +1,3 @@
-// Load environment variables from .env file
-require("dotenv").config();
-
-// Conditional pm2/io setup
-if (process.env.NODE_ENV === "production") {
-    const io = require("@pm2/io");
-    io.init({
-        transactions: true, // Enable transaction tracing
-        http: true, // Enable HTTP metrics (optional)
-    });
-    console.log("Running in production mode with pm2/io monitoring.");
-} else {
-    console.log("Running in development mode.");
-}
-
 // Import required packages
 const express = require("express");
 const helmet = require("helmet");
@@ -24,6 +9,16 @@ const Routes = require('./Routes/Routes')
 
 // Initialize express app
 const app = express();
+
+// Middleware to log every request
+app.use((req, res, next) => {
+  const oldSend = res.send;
+  res.send = function (data) {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Status: ${res.statusCode}`);
+    oldSend.apply(res, arguments);
+  };
+  next();
+});
 
 // Security middlewares
 app.use(helmet({
@@ -62,9 +57,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const connectDB = async (retries = 5) => {
     while (retries) {
         try {
-            await mongoose.connect(process.env.MONGO_URI, {
-
-            });
+            await mongoose.connect(process.env.MONGO_URI, {});
             console.info("Database connection successful");
             break;
         } catch (error) {
@@ -96,24 +89,22 @@ const server = app.listen(process.env.PORT || 8009, () => {
     console.log(`Server running securely on port ${process.env.PORT || 8009}`);
 });
 
-process.on("SIGTERM", () => {
+process.on("SIGTERM", async () => {
     console.log("SIGTERM signal received: closing HTTP server");
-    server.close(() => {
+    server.close(async () => {
         console.log("HTTP server closed");
-        mongoose.connection.close(false, () => {
-            console.log("MongoDB connection closed.");
-            process.exit(0);
-        });
+        await mongoose.connection.close();  // Use await to properly close the connection
+        console.log("MongoDB connection closed.");
+        process.exit(0);
     });
 });
 
-process.on("SIGINT", () => {
+process.on("SIGINT", async () => {
     console.log("SIGINT signal received: closing HTTP server");
-    server.close(() => {
+    server.close(async () => {
         console.log("HTTP server closed");
-        mongoose.connection.close(false, () => {
-            console.log("MongoDB connection closed.");
-            process.exit(0);
-        });
+        await mongoose.connection.close();  // Use await to properly close the connection
+        console.log("MongoDB connection closed.");
+        process.exit(0);
     });
 });

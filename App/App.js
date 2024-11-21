@@ -1,12 +1,11 @@
 import 'react-native-gesture-handler';
-import { ActivityIndicator, View, Text } from 'react-native'; // Added Text import
+import { ActivityIndicator, Appearance, Platform } from 'react-native'; // Added Text import
 import * as Fonts from 'expo-font';
-import * as SecureStore from 'expo-secure-store'; // Added SecureStore import
 import { useEffect, useState } from 'react';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import Store from './redux/Store';
 import PrivateScreens from './utils/PrivateScreens';
-
+import { StatusBar } from 'expo-status-bar';
 
 const LoadFonts = () => {
   return Fonts.loadAsync({
@@ -20,10 +19,12 @@ const LoadFonts = () => {
 
 export default function App() {
   const [FontLoaded, setFontLoaded] = useState(false);
+  const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
 
   useEffect(() => {
     const initializeApp = async () => {
       await LoadFonts();
+      setColorScheme(Appearance.getColorScheme() === 'dark' ? 'dark' : 'light'); // Fixed here
       setFontLoaded(true);
     };
 
@@ -36,6 +37,7 @@ export default function App() {
 
   return (
     <Provider store={Store}>
+      <StatusBar backgroundColor={colorScheme === 'dark' ? 'black' : 'white'} translucent={Platform.OS === 'ios'} />
       <PrivateScreens />
     </Provider>
   );
