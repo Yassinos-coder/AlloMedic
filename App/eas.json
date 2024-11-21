@@ -8,7 +8,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://172.232.39.16:8009/server/api/v1"
+        "EXPO_PUBLIC_API_URL": "http://192.168.3.13:8009/server/api/v1",
+        "DECRYPTION_KEY": "9adf1e4f7a12c5eb8bd83a87b1234567e1749b3a0f43d69aef15c9ed02e5a83f"
       }
     },
     "preview": {
@@ -17,7 +18,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://172.232.39.16:8009/server/api/v1"
+        "EXPO_PUBLIC_API_URL": "http://192.168.3.13:8009/server/api/v1",
+        "DECRYPTION_KEY": "9adf1e4f7a12c5eb8bd83a87b1234567e1749b3a0f43d69aef15c9ed02e5a83f"
       }
     },
     "production": {
@@ -26,7 +28,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://your-production-api-url.com"
+        "EXPO_PUBLIC_API_URL": "http://192.168.3.13:8009/server/api/v1",
+        "DECRYPTION_KEY": "9adf1e4f7a12c5eb8bd83a87b1234567e1749b3a0f43d69aef15c9ed02e5a83f"
       }
     }
   },
