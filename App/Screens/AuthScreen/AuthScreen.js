@@ -27,9 +27,15 @@ const AuthScreen = () => {
         dispatch(Signin({ userCredentials }))
             .then((response) => {
                 if (response.payload && response.payload.message === 'LOGIN_SUCCESS') {
+
+                    let uuid = response.payload.userData._id
+                    SecureStore.setItemAsync('uuid', uuid)
                     SecureStore.setItemAsync('isLoggedInSecureStore', 'true');
                     SecureStore.setItemAsync('jwtToken', response.payload.tokenKey);
                     navigation.navigate('HomeScreen')
+                    setNewUser(new UserObject());
+                    setUserCredentials({});
+                    setSelectedIndex(null);
                 } else {
                     console.error('Login failed or response was not successful.');
                 }
@@ -125,6 +131,8 @@ const AuthScreen = () => {
                                     setUserCredentials({ ...userCredentials, email: text });
                                 }}
                                 keyboardType="email-address"
+                                value={userCredentials.email}
+
                             />
                             <Input
                                 placeholder="Entrez votre mot de passe"
@@ -132,6 +140,8 @@ const AuthScreen = () => {
                                     setUserCredentials({ ...userCredentials, password: text });
                                 }}
                                 secureTextEntry={true}
+                                value={userCredentials.password}
+
                             />
                             <Button
                                 title="Log in"

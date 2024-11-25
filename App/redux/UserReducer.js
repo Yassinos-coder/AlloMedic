@@ -22,6 +22,16 @@ export const Signin = createAsyncThunk('user/Signin', async ({ userCredentials }
     }
 })
 
+export const GetUserData = createAsyncThunk('user/GetUserData', async ({ uuid }) => {
+    try {
+        const response = await AxiosDefault.get(`/GetUserData/${uuid}`)
+        let decryptedData = await DecryptData(response.data.encryptedResponse)
+        return decryptedData;
+    } catch (err) {
+        console.error(`Error in GetUserData ${err.message}`)
+    }
+})
+
 
 const UserReducer = createSlice({
     name: 'UserReducer',
@@ -33,14 +43,14 @@ const UserReducer = createSlice({
         userGPSLocation: null
     },
     reducers: {
-       setUserLocation(state, action) {
-        state.userGPSLocation = action.payload
-       }
+        setUserLocation(state, action) {
+            state.userGPSLocation = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(CreateAccount.fulfilled, (state, action) => {
-                state.userData = action.payload;
+                state.userData = action.payload.userData;
                 state.status = "fulfilled";
             })
             .addCase(CreateAccount.pending, (state) => {
@@ -51,7 +61,7 @@ const UserReducer = createSlice({
                 state.status = "rejected";
             })
             .addCase(Signin.fulfilled, (state, action) => {
-                state.userData = action.payload;
+                state.userData = action.payload.userData;
                 state.isLoggedIn = action.payload.message === 'LOGIN_SUCCESS' ? true : false
                 state.status = "fulfilled";
             })
@@ -59,6 +69,17 @@ const UserReducer = createSlice({
                 state.status = "pending";
             })
             .addCase(Signin.rejected, (state, action) => {
+                state.error = action.error;
+                state.status = "rejected";
+            })
+            .addCase(GetUserData.fulfilled, (state, action) => {
+                state.userData = action.payload.userData;
+                state.status = "fulfilled";
+            })
+            .addCase(GetUserData.pending, (state) => {
+                state.status = "pending";
+            })
+            .addCase(GetUserData.rejected, (state, action) => {
                 state.error = action.error;
                 state.status = "rejected";
             });

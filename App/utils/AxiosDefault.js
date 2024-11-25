@@ -6,13 +6,17 @@ const backendUrl = process.env.EXPO_PUBLIC_API_URL; // Replace with your actual 
 // Function to get the JWT token from Secure Store
 const getJwtToken = async () => {
   try {
-    const token = await SecureStore.getItemAsync('jwtToken');
-    return token;
+      const token = await SecureStore.getItemAsync('jwtToken');
+      if (!token) {
+          console.warn('No JWT token found');
+      }
+      return token;
   } catch (error) {
-    console.error('Error retrieving token', error);
-    return null;
+      console.error('Error retrieving token:', error);
+      return null;
   }
 };
+
 
 // Axios instance
 const AxiosDefault = axios.create({
@@ -29,6 +33,17 @@ AxiosDefault.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+AxiosDefault.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn('Unauthorized, redirecting to login');
+      // Implement redirect logic here, e.g., navigation.navigate('Login')
+    }
     return Promise.reject(error);
   }
 );

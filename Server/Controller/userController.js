@@ -154,3 +154,25 @@ exports.UpdatePassword = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
+exports.GetUserData = async (req, res) => {
+    let uuid = req.params.uuid
+    try {
+        const checkIsUserExists = await UserModel.findOne({ _id: uuid })
+        if (checkIsUserExists) {
+            const { _id, email, fullname, role, is_verified_user } = checkIsUserExists;
+            const encryptedResponse = EncryptData({
+                userData: { _id, email, fullname, role, is_verified_user },
+                message: 'FETCH_SUCCESS'
+            });
+            res.status(200).json({ encryptedResponse })
+        } else {
+            const encryptedResponse = EncryptData({
+                message: 'FETCH_FAILED'
+            });
+            res.status(200).json({ encryptedResponse });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}
