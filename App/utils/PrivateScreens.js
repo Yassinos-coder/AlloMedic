@@ -7,6 +7,7 @@ import WelcomingScreen from '../Screens/WelcomingScreen/WelcomingScreen';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import AccountSettings from '../Screens/AccountSettings/AccountSettings';
 
 const Drawer = createDrawerNavigator();
 
@@ -37,7 +38,8 @@ const PrivateScreens = () => {
                 {isLoggedInFromStore && (
                     <>
                         <Drawer.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Accueil' }} />
-                        <Drawer.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Paramètres du compte' }} />
+                        <Drawer.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Mon compte' }} />
+                        <Drawer.Screen name="AccountSettings" component={AccountSettings} options={{ title: 'Paramètres du compte' }} />
                     </>
                 )}
                 {(!isLoggedInFromStore) && (

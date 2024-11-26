@@ -26,8 +26,8 @@ exports.signup = async (req, res) => {
         const SaveNewUser = new UserModel(newUser)
         const isSaved = await SaveNewUser.save()
         if (isSaved) {
-            const { _id, email, fullname, role, is_verified_user } = isSaved;
-            const token = await tokenSigner({ _id, email, fullname, role, is_verified_user });
+            const { _id, email, fullname, phonenumber, role, is_verified_user } = isSaved;
+            const token = await tokenSigner({ _id, email, fullname, role, phonenumber, is_verified_user });
             const encryptedResponse = EncryptData({
                 userData: isSaved,
                 tokenKey: token,
@@ -50,13 +50,17 @@ exports.signin = async (req, res) => {
         if (UserFromDB) {
             const result = bcrypt.compareSync(userCredentials.password, UserFromDB.password);
             if (result) {
-                const { _id, email, fullname, role, is_verified_user } = UserFromDB;
-                const token = await tokenSigner({ _id, email, fullname, role, is_verified_user });
+                const userWithoutPassword = UserFromDB.toObject();
+                delete userWithoutPassword.password;
+
+                const token = await tokenSigner(userWithoutPassword);
+
                 const encryptedResponse = EncryptData({
-                    userData: { _id, email, fullname, role, is_verified_user },
+                    userData: userWithoutPassword,
                     tokenKey: token,
                     message: 'LOGIN_SUCCESS'
                 });
+
                 res.status(200).json({ encryptedResponse });
             } else {
                 const encryptedResponse = EncryptData({

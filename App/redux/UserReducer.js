@@ -16,6 +16,7 @@ export const Signin = createAsyncThunk('user/Signin', async ({ userCredentials }
     try {
         const response = await AxiosDefault.post('/signin', userCredentials)
         let decryptedData = await DecryptData(response.data.encryptedResponse)
+        console.log('From redux', decryptedData)
         return decryptedData;
     } catch (err) {
         console.error(`Error in Signin ${err.message}`)
@@ -57,11 +58,13 @@ const UserReducer = createSlice({
                 state.status = "pending";
             })
             .addCase(CreateAccount.rejected, (state, action) => {
-                state.error = action.error;
+                state.error = action.payload.message;
                 state.status = "rejected";
             })
             .addCase(Signin.fulfilled, (state, action) => {
                 state.userData = action.payload.userData;
+                console.log('From redux 2', action.payload.userData)
+
                 state.isLoggedIn = action.payload.message === 'LOGIN_SUCCESS' ? true : false
                 state.status = "fulfilled";
             })
@@ -69,7 +72,7 @@ const UserReducer = createSlice({
                 state.status = "pending";
             })
             .addCase(Signin.rejected, (state, action) => {
-                state.error = action.error;
+                state.error = action.payload.message;
                 state.status = "rejected";
             })
             .addCase(GetUserData.fulfilled, (state, action) => {
@@ -80,7 +83,7 @@ const UserReducer = createSlice({
                 state.status = "pending";
             })
             .addCase(GetUserData.rejected, (state, action) => {
-                state.error = action.error;
+                state.error = action.payload.message;
                 state.status = "rejected";
             });
     }

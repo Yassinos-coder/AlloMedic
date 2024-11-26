@@ -47,7 +47,7 @@ const ProfileScreen = () => {
                     </CustomText>
                 </CustomText>
                 <View style={ProfileStyles.actions}>
-                    <Pressable style={[ProfileStyles.BtnModifyData, ProfileStyles.Pressables]} >
+                    <Pressable style={[ProfileStyles.BtnModifyData, ProfileStyles.Pressables]} onPress={() => { navigation.navigate('AccountSettings') }}>
                         <CustomText style={ProfileStyles.BtnModifyDataText}>Modifier mes donnèes</CustomText>
                     </Pressable>
                     <Pressable style={[ProfileStyles.BtnLogout, ProfileStyles.Pressables]} onPress={Logout}>

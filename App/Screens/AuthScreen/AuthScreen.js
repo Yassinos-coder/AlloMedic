@@ -36,7 +36,7 @@ const AuthScreen = () => {
                     setNewUser(new UserObject());
                     setUserCredentials({});
                     setSelectedIndex(null);
-                } else {
+                } else if (response.payload.message === 'WRONG_PASSWORD') {
                     console.error('Login failed or response was not successful.');
                 }
             })
