@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthStyles from './AuthStyles';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Button, ButtonGroup, Input } from '@rneui/themed';
+import { Button, ButtonGroup, Dialog, Input } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateAccount, Signin } from '../../redux/UserReducer';
 import * as SecureStore from 'expo-secure-store';
@@ -19,24 +19,36 @@ const AuthScreen = () => {
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [mode, setMode] = useState(route.params?.mode || 'signin')
     const [userCredentials, setUserCredentials] = useState({});
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertMSG, setAlertMSG] = useState('')
+    const showDialog = (message) => {
+        setShowAlert(true)
+        setAlertMSG(message)
+    }
 
 
 
 
     const Login = () => {
         dispatch(Signin({ userCredentials }))
-            .then((response) => {
+            .then(async (response) => {
+                console.log(response)
                 if (response.payload && response.payload.message === 'LOGIN_SUCCESS') {
+                    const uuid = response.payload.userData._id; // Extract the UUID
+                    const token = response.payload.tokenKey; // Extract the JWT token
 
-                    let uuid = response.payload.userData._id
-                    SecureStore.setItemAsync('uuid', uuid)
-                    SecureStore.setItemAsync('isLoggedInSecureStore', 'true');
-                    SecureStore.setItemAsync('jwtToken', response.payload.tokenKey);
-                    navigation.navigate('HomeScreen')
+                    // Store UUID and other sensitive data securely
+                    await SecureStore.setItemAsync('uuid', uuid);
+                    await SecureStore.setItemAsync('isLoggedInSecureStore', 'true');
+                    await SecureStore.setItemAsync('jwtToken', token);
+
+                    // Navigate to the home screen
+                    navigation.navigate('HomeScreen');
                     setNewUser(new UserObject());
                     setUserCredentials({});
                     setSelectedIndex(null);
                 } else if (response.payload.message === 'WRONG_PASSWORD') {
+                    showDialog('Wrong Password')
                     console.error('Login failed or response was not successful.');
                 }
             })
@@ -53,6 +65,12 @@ const AuthScreen = () => {
 
     return (
         <SafeAreaView style={AuthStyles.container}>
+            <Dialog
+                isVisible={showAlert}
+                onBackdropPress={() => { setShowAlert(false) }}
+            >
+                <Dialog.Title title={`${alertMSG}`} />
+            </Dialog>
             {mode === 'signup' ? (
                 <>
                     <View style={AuthStyles.signup}>
