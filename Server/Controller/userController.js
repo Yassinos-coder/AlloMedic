@@ -57,6 +57,7 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         let userCredentials = req.body;
+        console.log(userCredentials)
         userCredentials.email = userCredentials.email.toLowerCase();
         const UserFromDB = await UserModel.findOne({ email: userCredentials.email });
         if (UserFromDB) {

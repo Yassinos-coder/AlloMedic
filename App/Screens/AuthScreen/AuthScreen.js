@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CreateAccount, Signin } from '../../redux/UserReducer';
 import * as SecureStore from 'expo-secure-store';
 import UserObject from '../../Models/UserObject'
+import * as Network from "expo-network";
+import axios from 'axios';
 
 const AuthScreen = () => {
     const dispatch = useDispatch();
@@ -25,11 +27,17 @@ const AuthScreen = () => {
         setShowAlert(true)
         setAlertMSG(message)
     }
+    const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation)
 
 
 
 
     const Login = () => {
+        const FetchIPLocation = async () => {
+            const ipAddress = await axios.get('https://api.ipify.org?format=json')
+            setUserCredentials({ ...userCredentials, user_ip: ipAddress.data.ip, user_location: userGPSLocation })
+        }
+        FetchIPLocation()
         dispatch(Signin({ userCredentials }))
             .then(async (response) => {
                 console.log(response)
