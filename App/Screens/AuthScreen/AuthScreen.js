@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthStyles from './AuthStyles';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -7,40 +7,55 @@ import { Button, ButtonGroup, Dialog, Input } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateAccount, Signin } from '../../redux/UserReducer';
 import * as SecureStore from 'expo-secure-store';
-import UserObject from '../../Models/UserObject'
-import * as Network from "expo-network";
+import UserObject from '../../Models/UserObject';
 import axios from 'axios';
 
 const AuthScreen = () => {
     const dispatch = useDispatch();
     const route = useRoute();
-    const navigation = useNavigation()
-    const isPending = useSelector((state) => state.UserReducer.status)
-    const userData = useSelector((state) => state.UserReducer.userData)
-    const [newUser, setNewUser] = useState(new UserObject())
+    const navigation = useNavigation();
+    const isPending = useSelector((state) => state.UserReducer.status);
+    const userData = useSelector((state) => state.UserReducer.userData);
+    const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation);
+
+    const [newUser, setNewUser] = useState(new UserObject());
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const [mode, setMode] = useState(route.params?.mode || 'signin')
+    const [mode, setMode] = useState(route.params?.mode || 'signin');
     const [userCredentials, setUserCredentials] = useState({});
-    const [showAlert, setShowAlert] = useState(false)
-    const [alertMSG, setAlertMSG] = useState('')
+    const [userIP, setUserIP] = useState(null); // State for user IP address
+    const [userLocation, setUserLocation] = useState(null); // State for user location
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMSG, setAlertMSG] = useState('');
+
     const showDialog = (message) => {
-        setShowAlert(true)
-        setAlertMSG(message)
-    }
-    const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation)
+        setShowAlert(true);
+        setAlertMSG(message);
+    };
 
+    // Fetch user's public IP address
+    useEffect(() => {
+        const fetchUserIP = async () => {
+            try {
+                const response = await axios.get('https://api.ipify.org?format=json');
+                setUserIP(response.data.ip);
+            } catch (error) {
+                console.error('Error fetching IP address:', error.message);
+            }
+        };
 
-
+        fetchUserIP();
+    }, []);
 
     const Login = () => {
-        const FetchIPLocation = async () => {
-            const ipAddress = await axios.get('https://api.ipify.org?format=json')
-            setUserCredentials({ ...userCredentials, user_ip: ipAddress.data.ip, user_location: userGPSLocation })
-        }
-        FetchIPLocation()
-        dispatch(Signin({ userCredentials }))
+        const credentials = {
+            ...userCredentials,
+            user_ip: userIP,
+            user_location: userGPSLocation || userLocation,
+        };
+
+        dispatch(Signin({ userCredentials: credentials }))
             .then(async (response) => {
-                console.log(response)
+                console.log(response);
                 if (response.payload && response.payload.message === 'LOGIN_SUCCESS') {
                     const uuid = response.payload.userData._id; // Extract the UUID
                     const token = response.payload.tokenKey; // Extract the JWT token
@@ -56,7 +71,7 @@ const AuthScreen = () => {
                     setUserCredentials({});
                     setSelectedIndex(null);
                 } else if (response.payload.message === 'WRONG_PASSWORD') {
-                    showDialog('Wrong Password')
+                    showDialog('Wrong Password');
                     console.error('Login failed or response was not successful.');
                 }
             })
@@ -64,18 +79,19 @@ const AuthScreen = () => {
     };
 
     const Signup = () => {
-        console.log(newUser)
-        dispatch(CreateAccount({ newUser })).then((response) => {
-
-        }).catch(err => console.error(err.message))
-    }
-
+        console.log(newUser);
+        dispatch(CreateAccount({ newUser }))
+            .then((response) => {
+                console.log('Signup successful:', response);
+            })
+            .catch((err) => console.error(err.message));
+    };
 
     return (
         <SafeAreaView style={AuthStyles.container}>
             <Dialog
                 isVisible={showAlert}
-                onBackdropPress={() => { setShowAlert(false) }}
+                onBackdropPress={() => setShowAlert(false)}
             >
                 <Dialog.Title title={`${alertMSG}`} />
             </Dialog>
@@ -83,33 +99,32 @@ const AuthScreen = () => {
                 <>
                     <View style={AuthStyles.signup}>
                         <View style={AuthStyles.subSignup}>
-                            <Text style={AuthStyles.title}>Authentification | Creation de compte</Text>
+                            <Text style={AuthStyles.title}>
+                                Authentification | Creation de compte
+                            </Text>
 
                             <Input
                                 placeholder="Entrez votre nom complet"
                                 onChangeText={(text) => {
-                                    setNewUser({ ...newUser, fullname: text })
+                                    setNewUser({ ...newUser, fullname: text });
                                 }}
-                                keyboardType="email-address"
                             />
                             <Input
                                 placeholder="Entrez votre adresse mail"
                                 onChangeText={(text) => {
-                                    setNewUser({ ...newUser, email: text })
+                                    setNewUser({ ...newUser, email: text });
                                 }}
-                                keyboardType="email-address"
                             />
                             <Input
                                 placeholder="Entrez votre numero de telephone"
                                 onChangeText={(text) => {
-                                    setNewUser({ ...newUser, phonenumber: text })
+                                    setNewUser({ ...newUser, phonenumber: text });
                                 }}
-                                keyboardType="email-address"
                             />
                             <Input
                                 placeholder="Entrez votre mot de passe"
                                 onChangeText={(text) => {
-                                    setNewUser({ ...newUser, password: text })
+                                    setNewUser({ ...newUser, password: text });
                                 }}
                                 secureTextEntry={true}
                             />
@@ -119,21 +134,17 @@ const AuthScreen = () => {
                                 onPress={(value) => {
                                     setSelectedIndex(value);
                                     const role = value === 0 ? 'medic' : 'user';
-                                    console.log(role)
-                                    setNewUser({ ...newUser, role: role })
-
+                                    setNewUser({ ...newUser, role });
                                 }}
                                 containerStyle={{ marginBottom: 20 }}
                             />
                             <Button
                                 title="Creer le compte"
-                                loading={isPending === 'pending' ? true : false}
-                                loadingProps={{ size: 'small', color: 'white' }}
+                                loading={isPending === 'pending'}
                                 buttonStyle={{
                                     backgroundColor: 'rgba(111, 202, 186, 1)',
                                     borderRadius: 5,
                                 }}
-                                titleStyle={{ fontWeight: 'bold', fontSize: 20 }}
                                 containerStyle={{
                                     marginHorizontal: 50,
                                     height: 50,
@@ -149,8 +160,17 @@ const AuthScreen = () => {
                 <>
                     <View style={AuthStyles.signin}>
                         <View style={AuthStyles.subSignin}>
-                            <Text style={AuthStyles.title}>Authentification | Connexion</Text>
-                            <Text style={[{ color: 'red' }, userData.message === 'WRONG_PASSWORD' ? {} : { display: 'none' }]}> Mot de passe erroné </Text>
+                            <Text style={AuthStyles.title}>
+                                Authentification | Connexion
+                            </Text>
+                            <Text
+                                style={[
+                                    { color: 'red' },
+                                    userData.message === 'WRONG_PASSWORD' ? {} : { display: 'none' },
+                                ]}
+                            >
+                                Mot de passe erroné
+                            </Text>
                             <Input
                                 placeholder="Entrez votre adresse mail"
                                 onChangeText={(text) => {
@@ -158,7 +178,6 @@ const AuthScreen = () => {
                                 }}
                                 keyboardType="email-address"
                                 value={userCredentials.email}
-
                             />
                             <Input
                                 placeholder="Entrez votre mot de passe"
@@ -167,17 +186,14 @@ const AuthScreen = () => {
                                 }}
                                 secureTextEntry={true}
                                 value={userCredentials.password}
-
                             />
                             <Button
                                 title="Log in"
-                                loading={isPending === 'pending' ? true : false}
-                                loadingProps={{ size: 'small', color: 'white' }}
+                                loading={isPending === 'pending'}
                                 buttonStyle={{
                                     backgroundColor: 'rgba(111, 202, 186, 1)',
                                     borderRadius: 5,
                                 }}
-                                titleStyle={{ fontWeight: 'bold', fontSize: 20 }}
                                 containerStyle={{
                                     marginHorizontal: 50,
                                     height: 50,
@@ -188,13 +204,10 @@ const AuthScreen = () => {
                             />
                             <Button
                                 title="Creer un compte"
-                                loading={false}
-                                loadingProps={{ size: 'small', color: 'white' }}
                                 buttonStyle={{
                                     backgroundColor: 'rgba(111, 202, 186, 1)',
                                     borderRadius: 5,
                                 }}
-                                titleStyle={{ fontWeight: 'bold', fontSize: 20 }}
                                 containerStyle={{
                                     marginHorizontal: 50,
                                     height: 50,
