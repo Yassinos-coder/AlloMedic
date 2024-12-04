@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../Schemas/UserModel');
+const UserConnectionsLogModel = require('../Schemas/UserConnectionsLogModel')
 const { tokenSigner, verifyToken } = require('../utils/jwt');
 const { EncryptData } = require('../utils/dataCrypter');
 const { SendEmail } = require('../utils/NodemailerConfig');
@@ -57,7 +58,6 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         let userCredentials = req.body;
-        console.log(userCredentials)
         userCredentials.email = userCredentials.email.toLowerCase();
         const UserFromDB = await UserModel.findOne({ email: userCredentials.email });
         if (UserFromDB) {
@@ -73,6 +73,20 @@ exports.signin = async (req, res) => {
                     tokenKey: token,
                     message: 'LOGIN_SUCCESS'
                 });
+                const doesLogAlreadyExists = await UserConnectionsLogModel.findOne({ user_id: UserFromDB._id })
+                if (doesLogAlreadyExists) {
+                    await UserConnectionsLogModel.updateMany({ user_id: UserFromDB._id }, {
+                        last_ip_address: userCredentials.user_ip,
+                        last_location: `${userCredentials.user_location.coords.longitude}, ${userCredentials.user_location.coords.latitude}`,
+                    })
+                } else {
+                    const userLoginLog = new UserConnectionsLogModel({
+                        user_id: UserFromDB._id,
+                        last_ip_address: userCredentials.user_ip,
+                        last_location: `${userCredentials.user_location.coords.longitude}, ${userCredentials.user_location.coords.latitude}`, // Fix: Proper concatenation
+                    });
+                    await userLoginLog.save()
+                }
 
                 res.status(200).json({ encryptedResponse });
             } else {
@@ -82,6 +96,7 @@ exports.signin = async (req, res) => {
             res.status(200).json({ message: 'USER_NOT_FOUND' });
         }
     } catch (err) {
+        console.log(err.message)
         res.status(200).json({ message: err.message });
     }
 };

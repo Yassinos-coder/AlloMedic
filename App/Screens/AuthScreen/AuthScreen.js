@@ -55,7 +55,7 @@ const AuthScreen = () => {
 
         dispatch(Signin({ userCredentials: credentials }))
             .then(async (response) => {
-                console.log(response);
+                console.log(response.payload)
                 if (response.payload && response.payload.message === 'LOGIN_SUCCESS') {
                     const uuid = response.payload.userData._id; // Extract the UUID
                     const token = response.payload.tokenKey; // Extract the JWT token

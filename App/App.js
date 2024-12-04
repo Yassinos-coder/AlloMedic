@@ -22,6 +22,8 @@ export default function App() {
   const [FontLoaded, setFontLoaded] = useState(false);
   const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
 
+
+  
   useEffect(() => {
     const initializeApp = async () => {
       await LoadFonts();
