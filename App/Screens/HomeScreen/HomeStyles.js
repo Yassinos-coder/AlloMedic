@@ -35,14 +35,22 @@ const HomeStyles = StyleSheet.create({
     Pressables: {
         width: '100%',
         height: 50,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     PressablesText: {
         color: 'white', // White text for visibility
-       // fontWeight: 'bold',
-        fontFamily:'poppins-semibold',
+        fontFamily: 'poppins-semibold',
         textAlign: 'center',
         fontSize: 14,
+    },
+    refocusMap: {
+        width: 50,
+        position: 'absolute',
+        zIndex: 1000,
+        flex: 1,
+        alignSelf: 'flex-end',
+        marginTop: 10,
+        marginRight: 15, // Add margin to move the button away from the right edge
     },
 });
 

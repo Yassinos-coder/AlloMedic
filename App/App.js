@@ -7,6 +7,8 @@ import Store from './redux/Store';
 import PrivateScreens from './utils/PrivateScreens';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store'
+import { initializeSocketListeners } from './redux/CallsReducer';
+
 
 const LoadFonts = () => {
   return Fonts.loadAsync({
@@ -34,6 +36,7 @@ export default function App() {
 
     initializeApp();
   }, []);
+  initializeSocketListeners(Store.dispatch);
 
   if (!FontLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;

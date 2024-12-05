@@ -1,32 +1,51 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Dimensions, Pressable, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import * as Notifications from 'expo-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeStyles from './HomeStyles';
-import {  Dialog } from '@rneui/themed';
+import { Dialog, Icon } from '@rneui/themed';
 import { CreateUrgentCall } from '../../redux/CallsReducer';
+import CallsObject from '../../Models/CallsObject';
+import * as Location from 'expo-location';  // To handle location fetching
 
 const HomeScreen = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.UserReducer.userData);
   const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation);
   const [DialogVisible, setDialogVisible] = useState(false);
+  const [userLocation, setUserLocation] = useState(userGPSLocation);
+  const [newCall, setNewCall] = useState(new CallsObject());
+  const calls = useSelector((state) => state.CallsReducer.calls);
   const mapRef = useRef(null); // Reference for MapView
-  const [userLocation, setUserLocation] = useState(userGPSLocation)
 
   const ToggleDialogUnavailable = () => {
     setDialogVisible(!DialogVisible);
   };
 
   useEffect(() => {
-    setUserLocation(userGPSLocation)
-  },[userGPSLocation])
+    setUserLocation(userGPSLocation);
+    console.log('new call registered', calls);
+  }, [userGPSLocation, calls]);
 
-  const refocusMap = () => {
-    if (mapRef.current && userLocation) {
+  // Function to fetch current location
+  const getCurrentLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permission to access location was denied');
+      return;
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+    setUserLocation(location);
+    return location;
+  };
+
+  const refocusMap = async () => {
+    const location = await getCurrentLocation();
+    if (mapRef.current && location) {
       mapRef.current.animateToRegion({
-        latitude: userLocation.coords.latitude,
-        longitude: userLocation.coords.longitude,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
         latitudeDelta: 0.01, // Adjust for zoom level
         longitudeDelta: 0.01, // Adjust for zoom level
       });
@@ -34,23 +53,29 @@ const HomeScreen = () => {
   };
 
   const sendUrgentCall = () => {
-    const urgentCallData = {
-      userId: "12345",
-      location: { latitude: 37.7749, longitude: -122.4194 },
-      urgencyLevel: "High",
-      description: "Severe chest pain",
+    // Update the newCall state
+    const updatedCall = {
+      caller_id: userData._id,
+      call_location: `${userLocation.coords.latitude}, ${userLocation.coords.longitude}`,
+      call_status: 'ongoing',
     };
+    setNewCall(updatedCall); // Set the state
 
-    // Dispatch the action to create an urgent call
-    dispatch(CreateUrgentCall(urgentCallData));
-    console.log('sent')
-  }
+    // Dispatch the action to create an urgent call after state update
+    dispatch(CreateUrgentCall(updatedCall));
+    console.log('sent', updatedCall); // Log the updated call object
+  };
 
   return (
     <View style={HomeStyles.container}>
       <Dialog isVisible={DialogVisible} onBackdropPress={ToggleDialogUnavailable}>
         <Dialog.Title title="Service non disponible" />
       </Dialog>
+      <View style={[HomeStyles.refocusMap, { backgroundColor: '#FFA500', borderRadius: 20 }]}>
+        <Pressable style={HomeStyles.Pressables} onPress={refocusMap}>
+          <Icon name="my-location" type="MaterialIcons" color="#000000" />
+        </Pressable>
+      </View>
       {userLocation ? (
         <MapView
           ref={mapRef} // Attach ref to the MapView

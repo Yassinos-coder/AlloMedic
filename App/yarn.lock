@@ -3252,6 +3252,13 @@ expo-keep-awake@~14.0.1:
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-14.0.1.tgz#77c38feefa95c494aa167e6df5a6eacd17af2358"
   integrity sha512-c5mGCAIk2YM+Vsdy90BlEJ4ZX+KG5Au9EkJUIxXWlpnuKmDAJ3N+5nEZ7EUO1ZTheqoSBeAo4jJ8rTWPU+JXdw==
 
+expo-local-authentication@~15.0.1:
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/expo-local-authentication/-/expo-local-authentication-15.0.1.tgz#e640e4f9a30fd81318e0bb45143fe8aeec1d1e46"
+  integrity sha512-CGqcfgUNy1sQB0Uem8XWphPbMIC/R6TWknATNKROybQCt22R6GLkBEv2fEhggBtuGRK9ogi5p6ta2NRK8FpFUg==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-location@~18.0.3:
   version "18.0.3"
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-18.0.3.tgz#ef6eb442bb18f75165caaf344be0c19a45820048"
@@ -3291,10 +3298,10 @@ expo-network@^7.0.3:
   resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-7.0.3.tgz#792831cfda7fac9d142bbfb8ce0268ce2fb6a692"
   integrity sha512-WPpiXJR5/k2LFmSDAENRLjVyOK4cVuFakQpTY0sVPXwD5mL9IWTgxK8yJZ6hAGXdPUUUM9+TJvOWr8TfjOWznw==
 
-expo-notifications@~0.29.10:
-  version "0.29.10"
-  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.29.10.tgz#1ab41840db380fc775216e1fb3c07e7a1abd71bd"
-  integrity sha512-sNPAQxwWVR759iCM816gEU4+8MY08CAs+Cmp8VUkBCnPWZaz2pV30nEkwRhV3wjv+Sz78oIRkkVMVaHCa1XUVA==
+expo-notifications@~0.29.11:
+  version "0.29.11"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.29.11.tgz#0691f88c91f6598671cec8e2ff12922ea1493edf"
+  integrity sha512-u/Csc3YNOPjjuyjAeyj5ne7XR/Z0ABYVquhSnyjEj2Fp8mSldOPCMvaEA01pTFj+8HTlkjX5RZDvQ7cR62ngOA==
   dependencies:
     "@expo/image-utils" "^0.6.0"
     "@ide/backoff" "^1.0.0"

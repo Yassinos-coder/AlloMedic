@@ -1,38 +1,40 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const AuthStyles = StyleSheet.create({
     container: {
         flex: 1,
-        fontFamily: 'poppins-regular'
+        fontFamily: 'poppins-regular',
     },
     signin: {
-        flex: 1,               // Take up the full height of the container
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center',     // Center horizontally
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     subSignin: {
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center',     // Center horizontally
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
         width: 350,
-        borderRadius: 20
+        borderRadius: 20,
+        padding: 20, // Added padding
     },
     title: {
         fontSize: 18,
-        padding: 30
+        paddingBottom: 30, // Adjusted for better spacing
     },
     signup: {
-        flex: 1,               // Take up the full height of the container
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center',     // Center horizontally
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     subSignup: {
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center',     // Center horizontally
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
         width: 350,
-        borderRadius: 20
+        borderRadius: 20,
+        padding: 20, // Added padding
     },
-})
+});
 
-export default AuthStyles
+export default AuthStyles;
