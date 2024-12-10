@@ -64,6 +64,7 @@ const AuthScreen = () => {
                     await SecureStore.setItemAsync('uuid', uuid);
                     await SecureStore.setItemAsync('isLoggedInSecureStore', 'true');
                     await SecureStore.setItemAsync('jwtToken', token);
+                    await SecureStore.setItemAsync('user_role', response.payload.userData.role);
 
                     navigation.navigate('HomeScreen');
                     setNewUser(new UserObject());

@@ -33,7 +33,7 @@ const ProfileStyles = StyleSheet.create({
         textAlign: "center"
     },
     actions: {
-        marginTop: 100
+        marginTop: 50
     }
 })
 

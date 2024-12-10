@@ -7,7 +7,6 @@ import WelcomingScreen from '../Screens/WelcomingScreen/WelcomingScreen';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AccountSettings from '../Screens/AccountSettings/AccountSettings';
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import { setUserLocation } from '../redux/UserReducer';
@@ -82,11 +81,6 @@ const PrivateScreens = () => {
               name="ProfileScreen"
               component={ProfileScreen}
               options={{ title: 'Mon compte' }}
-            />
-            <Drawer.Screen
-              name="AccountSettings"
-              component={AccountSettings}
-              options={{ title: 'Paramètres du compte' }}
             />
           </>
         )}
