@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Linking, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthStyles from './AuthStyles';
@@ -9,6 +9,7 @@ import { CreateAccount, Signin } from '../../redux/UserReducer';
 import * as SecureStore from 'expo-secure-store';
 import UserObject from '../../Models/UserObject';
 import axios from 'axios';
+import CustomText from '../../Components/CustomText'
 
 const AuthScreen = () => {
     const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const AuthScreen = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMSG, setAlertMSG] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [medicSigningUp, setmedicSigningUp] = useState(false)
 
     const showDialog = (message) => {
         setShowAlert(true);
@@ -39,7 +41,7 @@ const AuthScreen = () => {
                 const response = await axios.get('https://api.ipify.org?format=json');
                 setUserIP(response.data.ip);
             } catch (error) {
-                console.error('Error fetching IP address:', error.message);
+                console.error('Erreur lors de la récupération de l\'adresse IP:', error.message);
             }
         };
 
@@ -68,16 +70,16 @@ const AuthScreen = () => {
                     setUserCredentials({});
                     setSelectedIndex(null);
                 } else if (response.payload.message === 'WRONG_PASSWORD') {
-                    showDialog('Wrong Password');
-                    console.error('Login failed or response was not successful.');
+                    showDialog('Mot de passe incorrect');
+                    console.error('Échec de la connexion ou réponse non réussie.');
                 }
             })
-            .catch((err) => console.error(`Login error: ${err.message}`));
+            .catch((err) => console.error(`Erreur de connexion: ${err.message}`));
     };
 
     const Signup = () => {
         dispatch(CreateAccount({ newUser }))
-            .then((response) => console.log('Signup successful:', response))
+            .then((response) => console.log('Inscription réussie:', response))
             .catch((err) => console.error(err.message));
     };
 
@@ -87,54 +89,106 @@ const AuthScreen = () => {
                 <Dialog.Title title={`${alertMSG}`} />
             </Dialog>
             {mode === 'signup' ? (
-                <View style={AuthStyles.signup}>
-                    <View style={AuthStyles.subSignup}>
-                        <Text style={AuthStyles.title}>
-                            Authentification | Creation de compte
-                        </Text>
-                        <Input
-                            placeholder="Entrez votre nom complet"
-                            onChangeText={(text) => setNewUser({ ...newUser, fullname: text })}
-                        />
-                        <Input
-                            placeholder="Entrez votre adresse mail"
-                            onChangeText={(text) => setNewUser({ ...newUser, email: text })}
-                        />
-                        <Input
-                            placeholder="Entrez votre numero de telephone"
-                            onChangeText={(text) => setNewUser({ ...newUser, phonenumber: text })}
-                        />
-                        <Input
-                            placeholder="Entrez votre mot de passe"
-                            secureTextEntry={!showPassword}
-                            onChangeText={(text) => setNewUser({ ...newUser, password: text })}
-                            rightIcon={
+                medicSigningUp ? (
+                    <View style={AuthStyles.signup}>
+                        <View style={AuthStyles.subSignup}>
+                            <CustomText>Pour créer votre compte en tant qu'infirmier ou médecin</CustomText>
+                            <CustomText>Cliquez sur le lien ci-dessous</CustomText>
+                            <Pressable
+                                onPress={async () => {
+                                    const url = 'https://www.google.com'; // Ensure the URL includes the protocol
+                                    const supported = await Linking.canOpenURL(url);
+
+                                    if (supported) {
+                                        await Linking.openURL(url);
+                                    } else {
+                                        console.error(`Impossible d'ouvrir l'URL: ${url}`);
+                                    }
+                                }}
+                            >
+                                <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>
+                                    Lien d'enregistrement
+                                </Text>
+                            </Pressable>
+
+                            <View style={AuthStyles.goBackButton}>
+
                                 <Icon
-                                    name={showPassword ? 'eye-off' : 'eye'}
-                                    type="ionicon"
-                                    onPress={() => setShowPassword(!showPassword)}
+                                    name="back"
+                                    type="antdesign"
+                                    color="black"
+                                    size={22}
+                                    onPress={() => {
+                                        setmedicSigningUp(false)
+                                    }}
                                 />
-                            }
-                        />
-                        <ButtonGroup
-                            buttons={['Medecin/Infermier', 'Utilisateur']}
-                            selectedIndex={selectedIndex}
-                            onPress={(value) => {
-                                setSelectedIndex(value);
-                                const role = value === 0 ? 'medic' : 'user';
-                                setNewUser({ ...newUser, role });
-                            }}
-                            containerStyle={{ marginBottom: 20 }}
-                        />
-                        <Button
-                            title="Creer le compte"
-                            loading={isPending === 'pending'}
-                            buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 5 }}
-                            containerStyle={{ marginHorizontal: 50, height: 50, width: 200, marginVertical: 10 }}
-                            onPress={Signup}
-                        />
+                            </View>
+                            <CustomText>Retour à la page d'accueil</CustomText>
+                        </View>
                     </View>
-                </View>
+                ) : (
+                    <View style={AuthStyles.signup}>
+                        <View style={AuthStyles.subSignup}>
+                            <Text style={AuthStyles.title}>
+                                Authentification | Création de compte
+                            </Text>
+                            <Input
+                                placeholder="Entrez votre nom complet"
+                                onChangeText={(text) => setNewUser({ ...newUser, fullname: text })}
+                            />
+                            <Input
+                                placeholder="Entrez votre adresse e-mail"
+                                onChangeText={(text) => setNewUser({ ...newUser, email: text })}
+                            />
+                            <Input
+                                placeholder="Entrez votre numéro de téléphone"
+                                onChangeText={(text) => setNewUser({ ...newUser, phonenumber: text })}
+                            />
+                            <Input
+                                placeholder="Entrez votre mot de passe"
+                                secureTextEntry={!showPassword}
+                                onChangeText={(text) => setNewUser({ ...newUser, password: text })}
+                                rightIcon={
+                                    <Icon
+                                        name={showPassword ? 'eye-off' : 'eye'}
+                                        type="ionicon"
+                                        onPress={() => setShowPassword(!showPassword)}
+                                    />
+                                }
+                            />
+                            <ButtonGroup
+                                buttons={['Médecin/Infirmier', 'Utilisateur']}
+                                selectedIndex={selectedIndex}
+                                onPress={(value) => {
+                                    setSelectedIndex(value);
+                                    const role = value === 0 ? 'medic' : 'user';
+                                    if (value === 0) {
+                                        setmedicSigningUp(true)
+                                    }
+                                    setNewUser({ ...newUser, role });
+                                }}
+                                containerStyle={{ marginBottom: 20 }}
+                            />
+                            <Button
+                                title="Créer le compte"
+                                loading={isPending === 'pending'}
+                                buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 5 }}
+                                containerStyle={{ marginHorizontal: 50, height: 50, width: 200, marginVertical: 10 }}
+                                onPress={Signup}
+                            />
+                            <Icon
+                                name="back"
+                                type="antdesign"
+                                color="black"
+                                size={22}
+                                onPress={() => {
+                                    setMode("signin")
+                                }}
+                            />
+                            <CustomText>Retournez à la page d'accueil</CustomText>
+                        </View>
+                    </View>
+                )
             ) : (
                 <View style={AuthStyles.signin}>
                     <View style={AuthStyles.subSignin}>
@@ -142,7 +196,7 @@ const AuthScreen = () => {
                             Authentification | Connexion
                         </Text>
                         <Input
-                            placeholder="Entrez votre adresse mail"
+                            placeholder="Entrez votre adresse e-mail"
                             onChangeText={(text) => setUserCredentials({ ...userCredentials, email: text })}
                             value={userCredentials.email}
                             keyboardType="email-address"
@@ -161,14 +215,14 @@ const AuthScreen = () => {
                             }
                         />
                         <Button
-                            title="Log in"
+                            title="Connexion"
                             loading={isPending === 'pending'}
                             buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 5 }}
                             containerStyle={{ marginHorizontal: 50, height: 50, width: 200, marginVertical: 10 }}
                             onPress={Login}
                         />
                         <Button
-                            title="Creer un compte"
+                            title="Créer un compte"
                             buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 5 }}
                             containerStyle={{ marginHorizontal: 50, height: 50, width: 200, marginVertical: 10 }}
                             onPress={() => setMode('signup')}

@@ -35,6 +35,14 @@ const AuthStyles = StyleSheet.create({
         borderRadius: 20,
         padding: 20, // Added padding
     },
+    goBackButton: {
+        backgroundColor: '#e9e9e9',
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        marginTop: 20
+    }
 });
 
 export default AuthStyles;
