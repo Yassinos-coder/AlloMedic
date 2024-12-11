@@ -1,0 +1,81 @@
+import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import CustomText from './CustomText'
+import { Avatar, Icon } from '@rneui/themed'
+
+const CallCard = (props) => {
+    const [priority, setPriority] = useState('medium')
+
+    useEffect(() => {
+        setPriority(props.priority)
+    }, [props.priority])  // added props.priority as dependency
+
+    // Set dynamic priority styles
+    const priorityStyles = {
+        High: {
+            color: 'white', fontWeight: 'bold',
+            backgroundColor: 'red', borderRadius: 20,
+            width: 50, textAlign: 'center'
+        },
+        Medium: {
+            color: 'white', fontWeight: 'bold',
+            backgroundColor: 'orange', borderRadius: 20,
+            maxWidth: 70, textAlign: 'center'
+        },
+        Low: {
+            color: 'white', fontWeight: 'bold',
+            backgroundColor: 'orange', borderRadius: 20,
+            maxWidth: 70, textAlign: 'center'
+        },
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Avatar
+                    size={50}
+                    rounded
+                    source={{
+                        uri: "https://cdn.shopify.com/s/files/1/0576/8445/9657/files/SeekPng.com_profile-icon-png_9665493.png?v=1650620910",
+                    }}
+                />
+                <CustomText> {props.fullname} </CustomText>
+            </View>
+
+            <View style={styles.detailsContainer}>
+                <CustomText style={priorityStyles[priority]}> {props.priority} </CustomText>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon
+                        name='location-pin'
+                        type='entypo'
+                        size={20}
+                    />
+                    <CustomText>: {props.location}</CustomText>
+                </View>
+
+                <CustomText>Description: {props.notes} </CustomText>
+            </View>
+        </View>
+    )
+}
+
+export default CallCard
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#f0f0f0', // light grey background
+        borderRadius: 20,
+        maxWidth: 400,
+        shadowColor: '#000', // shadow color
+        shadowOffset: { width: 0, height: 2 }, // shadow position
+        shadowOpacity: 0.1, // slight shadow opacity
+        shadowRadius: 4, // shadow blur radius
+        elevation: 3, // for Android shadow
+        padding: 10,
+
+    },
+    detailsContainer: {
+        marginLeft: 50, // Increased left margin to space out from Avatar
+        paddingLeft: 10, // Extra padding to prevent text from touching edges
+    }
+})

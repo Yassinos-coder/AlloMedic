@@ -17,5 +17,5 @@ router.get('/GetUserData/:uuid', verifyToken, GetUserData)
 router.post('/UpdateUserData/:DataToUpdate/:uuid', verifyToken, UpdateUserData)
 
 // ALL KINDS OF CALLS CONTROLLER
-router.post('/NewCall', NewCall)
+//router.post('/NewCall', NewCall)
 module.exports = router;

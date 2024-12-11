@@ -9,11 +9,10 @@ export const CreateUrgentCall = createAsyncThunk(
         try {
             console.log(newCall);
             socket.emit("urgentCall", newCall); // Emit the event to the server
-            const response = await AxiosDefault.post("/NewCall", newCall); // Save the call in the backend
-            return response.data; // Return the server response
+            return newCall; // Return newCall as the payload
         } catch (error) {
             console.error("Error creating urgent call", error);
-            throw error;
+            throw error; // Ensure the error is propagated
         }
     }
 );
@@ -23,21 +22,21 @@ const CallsReducer = createSlice({
     name: "CallsReducer",
     initialState: {
         calls: [], // List of all calls
-        status: "",
-        error: null,
+        status: "", // Tracks the current status of actions (pending, fulfilled, etc.)
+        error: null, // Holds error messages, if any
     },
     reducers: {
-        // Add a reducer for handling live updates
+        // Reducer for handling live updates from the socket
         updateCalls: (state, action) => {
             const updatedCall = action.payload;
             const existingIndex = state.calls.findIndex(
                 (call) => call.id === updatedCall.id
             );
             if (existingIndex !== -1) {
-                // Update existing call
+                // Update the existing call
                 state.calls[existingIndex] = updatedCall;
             } else {
-                // Add new call
+                // Add a new call
                 state.calls.push(updatedCall);
             }
         },
@@ -45,13 +44,15 @@ const CallsReducer = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(CreateUrgentCall.fulfilled, (state, action) => {
-                state.calls.push(action.payload.call); // Add new call to the list
+                state.calls.push(action.payload); // Add newCall to the state
+                state.status = "fulfilled"; // Optionally set status to track fulfillment
             })
             .addCase(CreateUrgentCall.pending, (state) => {
-                state.status = "pending";
+                state.status = "pending"; // Indicate the action is in progress
             })
             .addCase(CreateUrgentCall.rejected, (state, action) => {
-                state.error = action.error.message;
+                state.status = "rejected"; // Mark the action as rejected
+                state.error = action.error.message; // Capture the error message
             });
     },
 });

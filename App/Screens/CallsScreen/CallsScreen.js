@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View, Text } from "react-native";
 import socket from "../../utils/socketExpo";
+import CallCard from "../../Components/CallCard";
 
 const CallsScreen = () => {
   const [ongoingCalls, setOngoingCalls] = useState([]);
@@ -27,17 +28,18 @@ const CallsScreen = () => {
   return (
     <View>
       <Text>Ongoing Calls</Text>
+      <CallCard
+        fullname={'Yassine Castro'}
+        priority={'High'}
+        notes={'Test description of the call, including any relevant details.'}
+        location={'2 Rue Ahmed El Majjati, Casablanca, Morocco'}
+      />
+
       <FlatList
         data={ongoingCalls}
         keyExtractor={(item, index) => index.toString()} // Use a unique key
         renderItem={({ item }) => (
-          <View>
-            <Text>{`Call ID: ${item.userId}`}</Text>
-            <Text>{`Location: ${item.location}`}</Text>
-            <Text>{`Urgency Level: ${item.urgencyLevel}`}</Text>
-            <Text>{`Description: ${item.description}`}</Text>
-            <Text>{`Timestamp: ${item.timestamp}`}</Text>
-          </View>
+          <CallCard notes={item.call_notes} />
         )}
       />
     </View>

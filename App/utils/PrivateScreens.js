@@ -74,7 +74,7 @@ const PrivateScreens = () => {
         />
         {isLoggedInFromStore && (
           <>
-            {
+            {/* {
               userData.role === 'medic' && (
                 <Drawer.Screen
                   name="CallsScreen"
@@ -82,10 +82,10 @@ const PrivateScreens = () => {
                   options={{ title: 'Appel en cours' }}
                 />
               )
-            }
+            } */}
             <Drawer.Screen
               name="HomeScreen"
-              component={HomeScreen}
+              component={userData.role === 'medic' ? CallsScreen : HomeScreen}
               options={{ title: 'Accueil' }}
             />
             <Drawer.Screen
