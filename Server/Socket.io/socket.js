@@ -6,8 +6,8 @@ const setupSocket = (io) => {
         socket.on("urgentCall", (data) => {
             console.log("Urgent Call Received:", data);
 
-            // Broadcast the event to other clients
-            socket.broadcast.emit("urgentCallUpdate", {
+            // Emit the event to all connected clients (including the sender)
+            io.emit("urgentCallUpdate", {
                 userId: data.userId,
                 location: data.location,
                 urgencyLevel: data.urgencyLevel,

@@ -10,12 +10,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import { setUserLocation } from '../redux/UserReducer';
+import CallsScreen from '../Screens/CallsScreen/CallsScreen';
 
 const Drawer = createDrawerNavigator();
 
 const PrivateScreens = () => {
   const isLoggedIn = useSelector((state) => state.UserReducer.isLoggedIn);
   const userLocation = useSelector((state) => state.UserReducer.userLocation);
+  const userData = useSelector((state) => state.UserReducer.userData)
   const [isLoggedInSecureStore, setIsLoggedInSecureStore] = useState(null);
   const dispatch = useDispatch();
 
@@ -72,6 +74,15 @@ const PrivateScreens = () => {
         />
         {isLoggedInFromStore && (
           <>
+            {
+              userData.role === 'medic' && (
+                <Drawer.Screen
+                  name="CallsScreen"
+                  component={CallsScreen}
+                  options={{ title: 'Appel en cours' }}
+                />
+              )
+            }
             <Drawer.Screen
               name="HomeScreen"
               component={HomeScreen}
@@ -82,6 +93,7 @@ const PrivateScreens = () => {
               component={ProfileScreen}
               options={{ title: 'Mon compte' }}
             />
+
           </>
         )}
         {!isLoggedInFromStore && (
