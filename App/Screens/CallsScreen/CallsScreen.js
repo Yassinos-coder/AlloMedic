@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CallsScreenStyles from './CallsScreenStyles'
 import { FlatList, View, Text } from "react-native";
 import socket from "../../utils/socketExpo";
 import CallCard from "../../Components/CallCard";
@@ -27,19 +28,20 @@ const CallsScreen = () => {
 
   return (
     <View>
-      <Text>Ongoing Calls</Text>
-      <CallCard
-        fullname={'Yassine Castro'}
-        priority={'High'}
-        notes={'Test description of the call, including any relevant details.'}
-        location={'2 Rue Ahmed El Majjati, Casablanca, Morocco'}
-      />
+      <Text style={CallsScreenStyles.title}>Appel D'urgence Active</Text>
+
 
       <FlatList
         data={ongoingCalls}
         keyExtractor={(item, index) => index.toString()} // Use a unique key
         renderItem={({ item }) => (
-          <CallCard notes={item.call_notes} />
+          <CallCard
+            fullname={'Yassine Castro'}
+            priority={item.call_priority}
+            notes={item.call_notes}
+            location={item.call_location}
+            timestamp={item.timestamp}
+          />
         )}
       />
     </View>
