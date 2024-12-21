@@ -7,6 +7,7 @@ import { Dialog, Icon } from '@rneui/themed';
 import { CreateUrgentCall } from '../../redux/CallsReducer';
 import CallsObject from '../../Models/CallsObject';
 import * as Location from 'expo-location';  // To handle location fetching
+import CallPopup from '../../Components/CallPopup';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const HomeScreen = () => {
   const [newCall, setNewCall] = useState(new CallsObject());
   const calls = useSelector((state) => state.CallsReducer.calls);
   const mapRef = useRef(null); // Reference for MapView
+  const [showCallMaker, setShowCallMaker] = useState(true)
 
   const ToggleDialogUnavailable = () => {
     setDialogVisible(!DialogVisible);
@@ -53,21 +55,24 @@ const HomeScreen = () => {
   };
 
   const sendUrgentCall = () => {
+    setShowCallMaker(!showCallMaker)
     // Update the newCall state
-    const updatedCall = {
-      caller_id: userData._id,
-      call_location: `${userLocation.coords.latitude}, ${userLocation.coords.longitude}`,
-      call_status: 'ongoing',
-    };
-    setNewCall(updatedCall); // Set the state
+    // const updatedCall = {
+    //   caller_id: userData._id,
+    //   call_location: `${userLocation.coords.latitude}, ${userLocation.coords.longitude}`,
+    //   call_status: 'ongoing',
+    // };
+    // setNewCall(updatedCall); // Set the state
 
     // Dispatch the action to create an urgent call after state update
-    dispatch(CreateUrgentCall(updatedCall));
-    console.log('sent', updatedCall); // Log the updated call object
+    // dispatch(CreateUrgentCall(updatedCall));
+    // console.log('sent', updatedCall); // Log the updated call object
   };
 
   return (
     <View style={HomeStyles.container}>
+      <View style={HomeStyles.callPopUpView}><CallPopup show={showCallMaker} /></View>
+
       <Dialog isVisible={DialogVisible} onBackdropPress={ToggleDialogUnavailable}>
         <Dialog.Title title="Service non disponible" />
       </Dialog>
@@ -104,28 +109,31 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" /> Fetching location...
         </Text>
       )}
-      <View style={HomeStyles.actionView}>
-        <View style={[HomeStyles.nestedView, { backgroundColor: '#F53C3C', borderTopLeftRadius: 20 }]}>
-          <Pressable style={HomeStyles.Pressables} onPress={sendUrgentCall}>
-            <Text style={HomeStyles.PressablesText}>Urgence Medic</Text>
-          </Pressable>
-        </View>
-        <View style={[HomeStyles.nestedView, { backgroundColor: '#0077FF', borderTopRightRadius: 20 }]}>
-          <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
-            <Text style={HomeStyles.PressablesText}>Appel Ambulance</Text>
-          </Pressable>
-        </View>
-        <View style={[HomeStyles.nestedView, { backgroundColor: '#32CD32', borderBottomLeftRadius: 20 }]}>
-          <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
-            <Text style={HomeStyles.PressablesText}>Assistance</Text>
-          </Pressable>
-        </View>
-        <View style={[HomeStyles.nestedView, { backgroundColor: '#FFA500', borderBottomRightRadius: 20 }]}>
-          <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
-            <Text style={HomeStyles.PressablesText}>Visite Domicile</Text>
-          </Pressable>
-        </View>
-      </View>
+      {
+        showCallMaker ? (<></>) : (<View style={HomeStyles.actionView}>
+          <View style={[HomeStyles.nestedView, { backgroundColor: '#F53C3C', borderTopLeftRadius: 20 }]}>
+            <Pressable style={HomeStyles.Pressables} onPress={sendUrgentCall}>
+              <Text style={HomeStyles.PressablesText}>Urgence Medic</Text>
+            </Pressable>
+          </View>
+          <View style={[HomeStyles.nestedView, { backgroundColor: '#0077FF', borderTopRightRadius: 20 }]}>
+            <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
+              <Text style={HomeStyles.PressablesText}>Appel Ambulance</Text>
+            </Pressable>
+          </View>
+          <View style={[HomeStyles.nestedView, { backgroundColor: '#32CD32', borderBottomLeftRadius: 20 }]}>
+            <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
+              <Text style={HomeStyles.PressablesText}>Assistance</Text>
+            </Pressable>
+          </View>
+          <View style={[HomeStyles.nestedView, { backgroundColor: '#FFA500', borderBottomRightRadius: 20 }]}>
+            <Pressable style={HomeStyles.Pressables} onPress={ToggleDialogUnavailable}>
+              <Text style={HomeStyles.PressablesText}>Visite Domicile</Text>
+            </Pressable>
+          </View>
+        </View>)
+      }
+
     </View>
   );
 };

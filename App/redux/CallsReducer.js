@@ -17,6 +17,15 @@ export const CreateUrgentCall = createAsyncThunk(
     }
 );
 
+export const GetOnGoingCalls = createAsyncThunk('calls/GetOnGoingCalls', async ({ }) => {
+    try {
+        const response = await AxiosDefault.get('/calls/GetOnGoingCalls')
+        return response.data
+    } catch (err) {
+        console.error('ERROR IN GetOnGoingCalls Reducer')
+    }
+})
+
 // Reducer slice for managing calls
 const CallsReducer = createSlice({
     name: "CallsReducer",
@@ -32,11 +41,12 @@ const CallsReducer = createSlice({
             const existingIndex = state.calls.findIndex(
                 (call) => call.id === updatedCall.id
             );
+
             if (existingIndex !== -1) {
                 // Update the existing call
                 state.calls[existingIndex] = updatedCall;
             } else {
-                // Add a new call
+                // Add a new call if it doesn't exist
                 state.calls.push(updatedCall);
             }
         },
@@ -51,6 +61,17 @@ const CallsReducer = createSlice({
                 state.status = "pending"; // Indicate the action is in progress
             })
             .addCase(CreateUrgentCall.rejected, (state, action) => {
+                state.status = "rejected"; // Mark the action as rejected
+                state.error = action.error.message; // Capture the error message
+            })
+            .addCase(GetOnGoingCalls.fulfilled, (state, action) => {
+                state.calls = action.payload.calls; // Replace state.calls with the fetched data
+                state.status = "fulfilled";
+            })
+            .addCase(GetOnGoingCalls.pending, (state) => {
+                state.status = "pending"; // Indicate the action is in progress
+            })
+            .addCase(GetOnGoingCalls.rejected, (state, action) => {
                 state.status = "rejected"; // Mark the action as rejected
                 state.error = action.error.message; // Capture the error message
             });

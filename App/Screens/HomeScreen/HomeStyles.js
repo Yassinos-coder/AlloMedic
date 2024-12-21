@@ -52,6 +52,26 @@ const HomeStyles = StyleSheet.create({
         marginTop: 10,
         marginRight: 15, // Add margin to move the button away from the right edge
     },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent dark background
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    callPopUpView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute', // Ensure it's on top of other elements
+        top: 0, // Center vertically
+        bottom: 0, // Center vertically
+        left: 0, // Center horizontally
+        right: 0, // Center horizontally
+        zIndex: 20, // Higher zIndex to ensure it appears above other elements
+    }
 });
 
 export default HomeStyles;

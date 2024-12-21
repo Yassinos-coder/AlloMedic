@@ -1,5 +1,4 @@
 const CallsModel = require("../Schemas/CallsModel");
-const axios = require('axios');
 
 const setupSocket = (io) => {
     io.on("connection", (socket) => {
@@ -10,19 +9,6 @@ const setupSocket = (io) => {
             try {
                 console.log("Urgent Call Received:", data);
 
-                // Reverse geocoding request
-                const reverseGeoCoding = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
-                    params: {
-                        key: process.env.GEO_API_KEY,
-                        pretty: 1,
-                        no_annotations: 1,
-                        q: data.call_location
-                    }
-                });
-
-                console.log(reverseGeoCoding.data.results[0]?.formatted);
-                data.call_location = reverseGeoCoding.data.results[0]?.formatted
-                // Save the new call
                 const newCall = new CallsModel(data);
                 const savedCall = await newCall.save();
 
