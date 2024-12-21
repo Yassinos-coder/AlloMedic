@@ -46,9 +46,9 @@ const CallsScreen = () => {
         renderItem={({ item }) => (
           <CallCard
             fullname={'Yassine Castro'}
-            priority={item.call_priority}
-            notes={item.call_notes}
             location={item.call_location}
+            notes={item.call_notes}
+            priority={item.call_priority}
             timestamp={item.timestamp}
           />
         )}
