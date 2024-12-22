@@ -110,7 +110,7 @@ const ProfileScreen = () => {
                         </CustomText>
                     </CustomText>
                     <CustomText>
-                        Connectez en tant qu'{userData?.role === 'user' ? 'utilisateur' : 'Erreur'}
+                        Connectez en tant qu'{userData?.role === 'user' ? 'utilisateur' : userData?.role === 'medic' ?'Medic' : 'ERREUR'}
                     </CustomText>
                     <View style={ProfileStyles.actions}>
                         <Pressable
