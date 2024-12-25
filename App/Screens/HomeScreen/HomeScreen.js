@@ -1,24 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Dimensions, Pressable, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import HomeStyles from './HomeStyles';
 import { Dialog, Icon } from '@rneui/themed';
-import { CreateUrgentCall } from '../../redux/CallsReducer';
-import CallsObject from '../../Models/CallsObject';
+
 import * as Location from 'expo-location';  // To handle location fetching
 import CallPopup from '../../Components/CallPopup';
 
 const HomeScreen = () => {
-  const dispatch = useDispatch();
-  const userData = useSelector((state) => state.UserReducer.userData);
   const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation);
   const [DialogVisible, setDialogVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(userGPSLocation);
-  const [newCall, setNewCall] = useState(new CallsObject());
   const calls = useSelector((state) => state.CallsReducer.calls);
   const mapRef = useRef(null); // Reference for MapView
-  const [showCallMaker, setShowCallMaker] = useState(true)
+  const [showCallMaker, setShowCallMaker] = useState(false)
 
   const ToggleDialogUnavailable = () => {
     setDialogVisible(!DialogVisible);
@@ -44,30 +40,16 @@ const HomeScreen = () => {
 
   const refocusMap = async () => {
     const location = await getCurrentLocation();
-    if (mapRef.current && location) {
+    if (location && mapRef.current) {
       mapRef.current.animateToRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.01, // Adjust for zoom level
-        longitudeDelta: 0.01, // Adjust for zoom level
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
       });
     }
   };
 
-  const sendUrgentCall = () => {
-    setShowCallMaker(!showCallMaker)
-    // Update the newCall state
-    // const updatedCall = {
-    //   caller_id: userData._id,
-    //   call_location: `${userLocation.coords.latitude}, ${userLocation.coords.longitude}`,
-    //   call_status: 'ongoing',
-    // };
-    // setNewCall(updatedCall); // Set the state
-
-    // Dispatch the action to create an urgent call after state update
-    // dispatch(CreateUrgentCall(updatedCall));
-    // console.log('sent', updatedCall); // Log the updated call object
-  };
 
   return (
     <View style={HomeStyles.container}>
@@ -89,11 +71,12 @@ const HomeScreen = () => {
             height: Dimensions.get('window').height,
           }}
           initialRegion={{
-            latitude: userLocation.coords.latitude,
-            longitude: userLocation.coords.longitude,
-            latitudeDelta: 0.01, // Adjust for zoom level
-            longitudeDelta: 0.01, // Adjust for zoom level
+            latitude: userLocation?.coords?.latitude || 0,
+            longitude: userLocation?.coords?.longitude || 0,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
           }}
+
         >
           <Marker
             coordinate={{
@@ -112,7 +95,8 @@ const HomeScreen = () => {
       {
         showCallMaker ? (<></>) : (<View style={HomeStyles.actionView}>
           <View style={[HomeStyles.nestedView, { backgroundColor: '#F53C3C', borderTopLeftRadius: 20 }]}>
-            <Pressable style={HomeStyles.Pressables} onPress={sendUrgentCall}>
+            <Pressable style={HomeStyles.Pressables} onPress={() => setShowCallMaker(!showCallMaker)}>
+
               <Text style={HomeStyles.PressablesText}>Urgence Medic</Text>
             </Pressable>
           </View>
