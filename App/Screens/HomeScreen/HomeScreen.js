@@ -53,7 +53,6 @@ const HomeScreen = () => {
 
   return (
     <View style={HomeStyles.container}>
-      <View style={HomeStyles.callPopUpView}><CallPopup show={showCallMaker} /></View>
 
       <Dialog isVisible={DialogVisible} onBackdropPress={ToggleDialogUnavailable}>
         <Dialog.Title title="Service non disponible" />
@@ -95,7 +94,7 @@ const HomeScreen = () => {
       {
         showCallMaker ? (<></>) : (<View style={HomeStyles.actionView}>
           <View style={[HomeStyles.nestedView, { backgroundColor: '#F53C3C', borderTopLeftRadius: 20 }]}>
-            <Pressable style={HomeStyles.Pressables} onPress={() => setShowCallMaker(!showCallMaker)}>
+            <Pressable style={HomeStyles.Pressables} onPress={() => setShowCallMaker(true)}>
 
               <Text style={HomeStyles.PressablesText}>Urgence Medic</Text>
             </Pressable>
