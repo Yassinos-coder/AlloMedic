@@ -98,9 +98,9 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@>=10.0.0":
-  version "22.10.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.2.tgz#a485426e6d1fdafc7b0d4c7b24e2c78182ddabb9"
-  integrity sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==
+  version "22.10.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.3.tgz#cdc2a89bf6e5d5e593fad08e83f74d7348d5dd10"
+  integrity sha512-DifAyw4BkrufCILvD3ucnuN8eydUfc/C1GlyrnI+LK6543w5/L3VeVgf05o3B4fqSXP1dKYLOZsKfutpxPzZrw==
   dependencies:
     undici-types "~6.20.0"
 
@@ -715,9 +715,9 @@ express-rate-limit@^7.4.1:
   integrity sha512-eB5zbQh5h+VenMPM3fh+nw1YExi5nMr6HUCR62ELSP11huvxm/Uir1H1QEyTkk5QX6A58pX6NmaTMceKZ0Eodg==
 
 express-validator@^7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-7.2.0.tgz#f6077758732d52e2365bb983b1abaca51bbefba6"
-  integrity sha512-I2ByKD8panjtr8Y05l21Wph9xk7kk64UMyvJCl/fFM/3CTJq8isXYPLeKW/aZBCdb/LYNv63PwhY8khw8VWocA==
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-7.2.1.tgz#8403deaf810f9bededa0a4fd7116803e46f122c2"
+  integrity sha512-CjNE6aakfpuwGaHQZ3m8ltCG2Qvivd7RHtVMS/6nVxOM7xVGqr4bhflsm4+N5FP5zI7Zxp+Hae+9RE+o8e3ZOQ==
   dependencies:
     lodash "^4.17.21"
     validator "~13.12.0"
@@ -1291,9 +1291,9 @@ mongodb@~6.12.0:
     mongodb-connection-string-url "^3.0.0"
 
 mongoose@^8.8.1:
-  version "8.9.2"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.9.2.tgz#af5145ff8b247110d53b87cdf9acac2b6216784c"
-  integrity sha512-mLWynmZS1v8HTeMxyLhskQncS1SkrjW1eLNuFDYGQMQ/5QrFrxTLNwWXeCRZeKT2lXyaxW8bnJC9AKPT9jYMkw==
+  version "8.9.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.9.3.tgz#770a990f6992884a8a858c90f1be6862054e6fbc"
+  integrity sha512-G50GNPdMqhoiRAJ/24GYAzg13yxXDD3FOOFeYiFwtHmHpAJem3hxbYIxAhLJGWbYEiUZL0qFMu2LXYkgGAmo+Q==
   dependencies:
     bson "^6.10.1"
     kareem "2.6.3"
@@ -1950,9 +1950,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 systeminformation@^5.7:
-  version "5.23.16"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.23.16.tgz#250c4b61de5cdbddf94ff2774e662fbdc3d99521"
-  integrity sha512-1NFCUPy2CAHs5bQUKrcFmi93j8TA5UrlKqSZKvo5jdxcEeuscApay9f0kT13HNWWLenssINDtY6VfddFu7IQjQ==
+  version "5.24.4"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.24.4.tgz#61aba6327b911996275a14bf07816782c92f6413"
+  integrity sha512-RTX6ig1Qw6sJllWbJx4d9gWaX0N7rN+WeuLto0b5Jr9nhN9c2Vn12MRxp0oYy8DcAEupw3WEvBJ7Ra9Xrrdr9w==
 
 tar@^6.1.11:
   version "6.2.1"
