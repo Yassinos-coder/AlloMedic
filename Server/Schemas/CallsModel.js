@@ -7,7 +7,7 @@ const CallsSchema = new mongoose.Schema({
         required: true,
     },
     responder_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'user', // Assuming the responder is from the 'User' collection
         required: false,
     },
