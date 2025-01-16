@@ -1,20 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Dimensions, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Dimensions, Pressable, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import HomeStyles from './HomeStyles';
 import { Dialog, Icon } from '@rneui/themed';
 
-import * as Location from 'expo-location';  // To handle location fetching
+import * as Location from 'expo-location'; // To handle location fetching
 import CallPopup from '../../Components/CallPopup';
+import { updateShowCallMaker } from '../../redux/AppReducer';
 
 const HomeScreen = () => {
+  const dispatch = useDispatch()
+  const showCallMakerPopUp = useSelector((state) => state.AppReducer.showCallMakerPopUp)
   const userGPSLocation = useSelector((state) => state.UserReducer.userGPSLocation);
   const [DialogVisible, setDialogVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(userGPSLocation);
   const calls = useSelector((state) => state.CallsReducer.calls);
   const mapRef = useRef(null); // Reference for MapView
-  const [showCallMaker, setShowCallMaker] = useState(false)
 
   const ToggleDialogUnavailable = () => {
     setDialogVisible(!DialogVisible);
@@ -50,9 +52,11 @@ const HomeScreen = () => {
     }
   };
 
-
   return (
     <View style={HomeStyles.container}>
+
+      <CallPopup isVisible={showCallMakerPopUp} />
+
 
       <Dialog isVisible={DialogVisible} onBackdropPress={ToggleDialogUnavailable}>
         <Dialog.Title title="Service non disponible" />
@@ -75,7 +79,6 @@ const HomeScreen = () => {
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
-
         >
           <Marker
             coordinate={{
@@ -91,11 +94,10 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" /> Fetching location...
         </Text>
       )}
-      {
-        showCallMaker ? (<></>) : (<View style={HomeStyles.actionView}>
+      {!showCallMakerPopUp && (
+        <View style={HomeStyles.actionView}>
           <View style={[HomeStyles.nestedView, { backgroundColor: '#F53C3C', borderTopLeftRadius: 20 }]}>
-            <Pressable style={HomeStyles.Pressables} onPress={() => setShowCallMaker(true)}>
-
+            <Pressable style={HomeStyles.Pressables} onPress={() => dispatch(updateShowCallMaker())}>
               <Text style={HomeStyles.PressablesText}>Urgence Medic</Text>
             </Pressable>
           </View>
@@ -114,9 +116,8 @@ const HomeScreen = () => {
               <Text style={HomeStyles.PressablesText}>Visite Domicile</Text>
             </Pressable>
           </View>
-        </View>)
-      }
-
+        </View>
+      )}
     </View>
   );
 };
