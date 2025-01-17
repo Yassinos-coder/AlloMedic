@@ -25,6 +25,7 @@ const setupSocket = (io) => {
                         call_notes: data.call_notes,
                         call_status: data.call_status,
                         timestamp: new Date().toISOString(),
+                        call_sent: 'success'
                     });
                 }
             } catch (error) {

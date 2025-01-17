@@ -27,7 +27,7 @@ const CallPopup = ({ isVisible }) => {
 
     const sendUrgentCall = async () => {
         if (!newCall.call_notes || !newCall.call_priority) {
-            alert("Please fill in all fields before proceeding.");
+            alert("Une erreur est survenue!");
             return;
         }
 
@@ -40,38 +40,52 @@ const CallPopup = ({ isVisible }) => {
                     q: `${userGPSLocation.coords.latitude}, ${userGPSLocation.coords.longitude}`,
                 },
             });
+
             const caller_id_option = userData?._id || await SecureStore.getItemAsync('uuid');
 
             const updatedCall = {
                 ...newCall,
-                caller_id: caller_id_option, 
+                caller_id: caller_id_option,
                 call_location: response.data.results[0]?.formatted || 'Unknown Location',
                 call_status: 'ongoing',
             };
 
             setNewCall(updatedCall);
-            dispatch(CreateUrgentCall(updatedCall));
-            console.log('Call Sent:', updatedCall);
+
+            dispatch(CreateUrgentCall(updatedCall))
+                .then((response) => {
+                    if (!response.payload) {
+                        alert("Une erreur est survenue!");
+                    }
+                    dispatch(updateShowCallMaker())
+                })
+                .catch((error) => {
+                    console.error('Error in dispatch:', error);
+                    alert("Une erreur est survenue!");
+                });
         } catch (error) {
             console.error('Error fetching geolocation:', error);
             alert('An error occurred while sending the call. Please try again.');
         }
     };
 
+
     return (
         <>
             {showCallMakerPopUp && (
                 <View style={styles.container}>
-                    <Icon
-                        name="close"
-                        type="antdesign"
-                        color="black"
-                        size={22}
-                        onPress={() => dispatch(updateShowCallMaker())}
-                    />
+
                     <View style={styles.callView}>
-                        <Text>Veuillez remplir les champs ci-dessous</Text>
-                        <Text style={{ fontFamily: 'poppins-semibold', color: 'red' }}>
+                        <Icon
+                            name="close"
+                            type="antdesign"
+                            color="black"
+                            size={22}
+                            onPress={() => dispatch(updateShowCallMaker())}
+                            style={styles.popupClose}
+                        />
+                        <Text style={{ marginTop: 15, marginBottom: 5 }}>Veuillez remplir les champs ci-dessous</Text>
+                        <Text style={{ fontFamily: 'poppins-semibold', color: 'red', marginBottom: 5 }}>
                             Nous allons envoyer votre position actuelle
                         </Text>
                         <Text>Décrivez votre urgence</Text>
@@ -79,6 +93,11 @@ const CallPopup = ({ isVisible }) => {
                             onChangeText={(text) =>
                                 setNewCall((prevCall) => ({ ...prevCall, call_notes: text }))
                             }
+                            inputContainerStyle={{
+                                borderBottomWidth: 0, // Removes the underline
+                            }}
+                            style={styles.Input}
+                            placeholder='En bref, indiquez votre urgence'
                         />
                         <Text>Niveau d'urgence</Text>
                         <ButtonGroup
@@ -93,7 +112,18 @@ const CallPopup = ({ isVisible }) => {
                             }}
                             containerStyle={{ marginBottom: 0 }}
                         />
-                        <Button title="APPELER" onPress={sendUrgentCall} />
+                        <Button
+                            title="LANCER L'APPEL"
+                            onPress={sendUrgentCall}
+                            buttonStyle={{
+                                backgroundColor: 'red',
+                                borderRadius: 3,
+                                marginTop: 15,
+                                width: 200,
+                            }}
+                            disabled={!newCall.call_notes || !newCall.call_priority ? true : false}
+                        />
+
                     </View>
                 </View>
             )}
@@ -115,10 +145,25 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     callView: {
+        position: 'relative', // Enable relative positioning for positioning child elements
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(85, 85, 85, 0.8)',
-        padding: 20,
+        backgroundColor: 'white',
+        padding: 10,
         borderRadius: 10,
+        width: '80%', // Set a width to make the layout consistent
     },
+    popupClose: {
+        marginLeft: 260,
+        marginTop: -5
+    },
+    Input: {
+        backgroundColor: 'rgba(180, 180, 180, 0.5)',
+        borderRadius: 50,
+        paddingLeft: 15,
+        fontSize: 15
+
+    },
+
 });
+
