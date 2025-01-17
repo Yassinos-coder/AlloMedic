@@ -24,7 +24,7 @@ const setupSocket = (io) => {
                         call_priority: data.call_priority,
                         call_notes: data.call_notes,
                         call_status: data.call_status,
-                        timestamp: new Date().toISOString(),
+                        call_timestamp: data.call_timestamp,
                         call_sent: 'success'
                     });
                 }

@@ -31,8 +31,10 @@ const CallsSchema = new mongoose.Schema({
         enum: ['ongoing', 'completed', 'canceled'], // Tracks the current status of the call
         default: 'ongoing',
     },
-}, { 
-    timestamps: true // Adds createdAt and updatedAt fields automatically
+    call_timestamp: {
+        type: String,
+        required: true
+    }
 });
 
 // Create the model

@@ -24,7 +24,7 @@ const CallsScreen = () => {
       // Dispatch to Redux store
       dispatch(updateCalls(updatedCall));
     });
-
+    console.log(calls)
     // Clean up when the component unmounts
     return () => {
       socket.off("urgentCallUpdate");
@@ -49,7 +49,7 @@ const CallsScreen = () => {
             location={item.call_location}
             notes={item.call_notes}
             priority={item.call_priority}
-            timestamp={item.timestamp}
+            timestamp={item.call_timestamp}
           />
         )}
       />

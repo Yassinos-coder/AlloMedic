@@ -43,11 +43,16 @@ const CallPopup = ({ isVisible }) => {
 
             const caller_id_option = userData?._id || await SecureStore.getItemAsync('uuid');
 
+            // Generate the call timestamp
+            const now = new Date();
+            const call_timestamp = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
             const updatedCall = {
                 ...newCall,
                 caller_id: caller_id_option,
                 call_location: response.data.results[0]?.formatted || 'Unknown Location',
                 call_status: 'ongoing',
+                call_timestamp, // Add the generated timestamp here
             };
 
             setNewCall(updatedCall);
@@ -57,7 +62,7 @@ const CallPopup = ({ isVisible }) => {
                     if (!response.payload) {
                         alert("Une erreur est survenue!");
                     }
-                    dispatch(updateShowCallMaker())
+                    dispatch(updateShowCallMaker());
                 })
                 .catch((error) => {
                     console.error('Error in dispatch:', error);
@@ -68,6 +73,7 @@ const CallPopup = ({ isVisible }) => {
             alert('An error occurred while sending the call. Please try again.');
         }
     };
+
 
 
     return (

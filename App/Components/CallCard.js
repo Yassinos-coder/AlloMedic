@@ -8,13 +8,9 @@ const CallCard = (props) => {
 
     useEffect(() => {
         setPriority(props.priority);
+        console.log(props.timestamp)
     }, [props.priority]); // added props.priority as dependency
 
-    // Function to format the timestamp
-    const formatTimestamp = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toTimeString().split(' ')[0]; // Extracts time in HH:MM:SS format
-    };
 
     // Set dynamic priority styles
     const priorityStyles = {
@@ -58,7 +54,7 @@ const CallCard = (props) => {
                     <CustomText> {props.fullname} </CustomText>
                 </View>
                 <CustomText style={{ textAlign: 'right', fontSize: 12, color: '#555' }}>
-                    Signalé à {formatTimestamp(props.timestamp)}
+                    Signalé à {props.timestamp}
                 </CustomText>
             </View>
 
