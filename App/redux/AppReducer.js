@@ -6,17 +6,21 @@ import { createSlice } from "@reduxjs/toolkit";
 const AppReducer = createSlice({
     name: 'AppReducer',
     initialState: {
-        showCallMakerPopUp: false
+        showCallMakerPopUp: false,
+        ShowItinerary: false
     },
     reducers:{
         updateShowCallMaker : (state, action) => {
             state.showCallMakerPopUp = !state.showCallMakerPopUp
+        },
+        updateShowItinerary : (state, action) => {
+            state.showCallMakerPopUp = !state.ShowItinerary
         }
     }
 })
 
 
-export const { updateShowCallMaker } = AppReducer.actions;
+export const { updateShowCallMaker, updateShowItinerary } = AppReducer.actions;
 
 // Export the reducer
 export default AppReducer.reducer;

@@ -2,41 +2,47 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CustomText from './CustomText';
 import { Avatar, Icon } from '@rneui/themed';
+import { useDispatch } from 'react-redux';
+import { updateShowItinerary } from '../redux/AppReducer';
 
 const CallCard = (props) => {
     const [priority, setPriority] = useState('medium');
-
+    const dispatch = useDispatch()
     useEffect(() => {
         setPriority(props.priority);
-        console.log(props.timestamp)
     }, [props.priority]); // added props.priority as dependency
 
 
     // Set dynamic priority styles
     const priorityStyles = {
-        High: {
+        Urgent: {
             color: 'white',
             fontWeight: 'bold',
             backgroundColor: 'red',
             borderRadius: 20,
-            width: 50,
+            maxWidth: 120,
             textAlign: 'center',
+            fontSize: 13
         },
-        Medium: {
+        Moyen: {
             color: 'white',
             fontWeight: 'bold',
             backgroundColor: 'orange',
             borderRadius: 20,
             maxWidth: 70,
             textAlign: 'center',
+            fontSize: 13
+
         },
-        Low: {
+        Faible: {
             color: 'white',
             fontWeight: 'bold',
             backgroundColor: 'orange',
             borderRadius: 20,
             maxWidth: 70,
             textAlign: 'center',
+            fontSize: 13
+
         },
     };
 
@@ -54,12 +60,12 @@ const CallCard = (props) => {
                     <CustomText> {props.fullname} </CustomText>
                 </View>
                 <CustomText style={{ textAlign: 'right', fontSize: 12, color: '#555' }}>
-                    Signalé à {props.timestamp}
+                    Signalé le {props.timestamp}
                 </CustomText>
             </View>
 
             <View style={styles.detailsContainer}>
-                <CustomText style={[priorityStyles[priority]]}> {props.priority} </CustomText>
+                <CustomText style={[priorityStyles[priority]]}> Priorité:  {props.priority} </CustomText>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
                     <Icon name="location-pin" type="entypo" size={20} />
                     <CustomText>: {props.location}</CustomText>
@@ -68,7 +74,7 @@ const CallCard = (props) => {
                 <CustomText style={{ marginTop: 5 }}>Description: {props.notes} </CustomText>
             </View>
             <View style={styles.viewActions}>
-                <Pressable>
+                <Pressable onPress={() => dispatch(updateShowItinerary())}>
                     <View style={[styles.pressables, { backgroundColor: 'yellow' }]}>
                         <Text style={styles.pressableText}>Voir sur la map</Text>
                     </View>
@@ -87,15 +93,17 @@ export default CallCard;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#f0f0f0', // light grey background
+        backgroundColor: '#98c1d9', // light grey background
         borderRadius: 20,
-        maxWidth: 400,
+        maxWidth: 370,
         shadowColor: '#000', // shadow color
         shadowOffset: { width: 0, height: 2 }, // shadow position
         shadowOpacity: 0.1, // slight shadow opacity
         shadowRadius: 4, // shadow blur radius
         elevation: 3, // for Android shadow
         padding: 10,
+        marginTop: 15,
+        marginLeft: 7  
     },
     detailsContainer: {
         marginLeft: 50, // Increased left margin to space out from Avatar

@@ -22,7 +22,7 @@ const CallsSchema = new mongoose.Schema({
     },
     call_priority: {
         type: String,
-        enum: ['FAIBLE', 'MOYEN', 'URGENT'], // Ensures only these values are allowed
+        enum: ['Faible', 'Moyen', 'Urgent'], // Ensures only these values are allowed
         required: true,
         default: 'FAIBLE',
     },

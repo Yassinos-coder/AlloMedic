@@ -113,13 +113,13 @@ const CallPopup = ({ isVisible }) => {
                                 setSelectedIndex(value);
                                 setNewCall((prevCall) => ({
                                     ...prevCall,
-                                    call_priority: value === 2 ? 'URGENT' : value === 1 ? 'MOYEN' : 'FAIBLE',
+                                    call_priority: value === 2 ? 'Urgent' : value === 1 ? 'Moyen' : 'Faible',
                                 }));
                             }}
                             containerStyle={{ marginBottom: 0 }}
                         />
                         <Button
-                            title="LANCER L'APPEL"
+                            title="Lancer L'appel"
                             onPress={sendUrgentCall}
                             buttonStyle={{
                                 backgroundColor: 'red',
