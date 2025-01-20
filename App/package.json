@@ -17,7 +17,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
-    "expo": "~52.0.25",
+    "expo": "~52.0.26",
     "expo-constants": "~17.0.4",
     "expo-dev-client": "~5.0.9",
     "expo-font": "~13.0.3",
