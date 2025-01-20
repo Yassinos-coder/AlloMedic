@@ -14,7 +14,7 @@ const AppReducer = createSlice({
             state.showCallMakerPopUp = !state.showCallMakerPopUp
         },
         updateShowItinerary : (state, action) => {
-            state.showCallMakerPopUp = !state.ShowItinerary
+            state.ShowItinerary = !state.ShowItinerary
         }
     }
 })

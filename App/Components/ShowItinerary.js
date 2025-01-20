@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MapView, { Marker } from 'react-native-maps'
 import * as Location from 'expo-location'; // To handle location fetching
@@ -8,9 +8,12 @@ import { useSelector } from 'react-redux';
 const ShowItinerary = () => {
     const userLocation = useSelector((state) => state.UserReducer.userGPSLocatio)
     const showItinerary = useSelector((state) => state.AppReducer.ShowItinerary)
+    const [userLocationState, setUserLocationState] = useState(userLocation)
     useEffect(() => {
-        console.log(userLocation)
-    }, [])
+        setUserLocationState(userLocation)
+        console.log(userLocationState, showItinerary)
+        console.log('Shown')
+    }, [userLocation])
     return (
         <View>
             {showItinerary ? (
@@ -22,16 +25,16 @@ const ShowItinerary = () => {
                             height: Dimensions.get('window').height,
                         }}
                         initialRegion={{
-                            latitude: userLocation?.coords?.latitude || 0,
-                            longitude: userLocation?.coords?.longitude || 0,
+                            latitude: userLocationState?.coords?.latitude || 0,
+                            longitude: userLocationState?.coords?.longitude || 0,
                             latitudeDelta: 0.01,
                             longitudeDelta: 0.01,
                         }}
                     >
                         <Marker
                             coordinate={{
-                                latitude: userLocation.coords.latitude,
-                                longitude: userLocation.coords.longitude,
+                                latitude: userLocationState.coords.latitude,
+                                longitude: userLocationState.coords.longitude,
                             }}
                             title="Vous"
                             description="Votre position actuelle"

@@ -12,7 +12,7 @@ const CallsSchema = new mongoose.Schema({
         required: false,
     },
     call_location: {
-        type: String, // Could be a string or a GeoJSON object for precise location data
+        type: Object, // Could be a string or a GeoJSON object for precise location data
         required: true,
     },
     call_notes: {

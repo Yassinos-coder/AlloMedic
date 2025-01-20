@@ -50,7 +50,10 @@ const CallPopup = ({ isVisible }) => {
             const updatedCall = {
                 ...newCall,
                 caller_id: caller_id_option,
-                call_location: response.data.results[0]?.formatted || 'Unknown Location',
+                call_location: {
+                    address: response.data.results[0]?.formatted || 'Unknown Location',
+                    coords: `${userGPSLocation.coords.latitude}, ${userGPSLocation.coords.longitude}`
+                },
                 call_status: 'ongoing',
                 call_timestamp, // Add the generated timestamp here
             };

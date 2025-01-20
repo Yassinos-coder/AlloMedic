@@ -2,11 +2,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CustomText from './CustomText';
 import { Avatar, Icon } from '@rneui/themed';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateShowItinerary } from '../redux/AppReducer';
 
 const CallCard = (props) => {
     const [priority, setPriority] = useState('medium');
+    const showItinerary = useSelector((state) => state.AppReducer.ShowItinerary)
+
     const dispatch = useDispatch()
     useEffect(() => {
         setPriority(props.priority);
@@ -74,7 +76,10 @@ const CallCard = (props) => {
                 <CustomText style={{ marginTop: 5 }}>Description: {props.notes} </CustomText>
             </View>
             <View style={styles.viewActions}>
-                <Pressable onPress={() => dispatch(updateShowItinerary())}>
+                <Pressable onPress={() => {
+                    dispatch(updateShowItinerary())
+                    console.log(showItinerary)
+                }}>
                     <View style={[styles.pressables, { backgroundColor: 'yellow' }]}>
                         <Text style={styles.pressableText}>Voir sur la map</Text>
                     </View>
@@ -93,21 +98,21 @@ export default CallCard;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#98c1d9', // light grey background
+        backgroundColor: '#BEDAEB',
         borderRadius: 20,
-        maxWidth: 370,
-        shadowColor: '#000', // shadow color
-        shadowOffset: { width: 0, height: 2 }, // shadow position
-        shadowOpacity: 0.1, // slight shadow opacity
-        shadowRadius: 4, // shadow blur radius
-        elevation: 3, // for Android shadow
+        maxWidth: '90%', // Set width relative to parent for consistency
+        alignSelf: 'center', // Center horizontally
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
         padding: 10,
         marginTop: 15,
-        marginLeft: 7  
     },
     detailsContainer: {
-        marginLeft: 50, // Increased left margin to space out from Avatar
-        paddingLeft: 10, // Extra padding to prevent text from touching edges
+        marginLeft: 50,
+        paddingLeft: 10,
     },
     viewActions: {
         flexDirection: 'row',
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
     },
     pressables: {
         width: 150,
-        backgroundColor: 'red',
+        backgroundColor: 'green',
         height: 30,
         borderRadius: 20,
         padding: 5,

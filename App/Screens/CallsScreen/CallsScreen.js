@@ -5,6 +5,7 @@ import socket from "../../utils/socketExpo";
 import CallCard from "../../Components/CallCard";
 import { useDispatch, useSelector } from "react-redux";
 import { GetOnGoingCalls, updateCalls } from "../../redux/CallsReducer";
+import ShowItinerary from "../../Components/ShowItinerary";
 
 const CallsScreen = () => {
   const dispatch = useDispatch();
@@ -33,19 +34,20 @@ const CallsScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Sync Redux state with local state for ongoing calls
     setOngoingCalls(calls);
   }, [calls]);
 
   return (
     <View>
+      <ShowItinerary />
       <Text style={CallsScreenStyles.title}>Appel D'urgence Active</Text>
       <FlatList
         data={ongoingCalls}
-        keyExtractor={(item, index) => index.toString()} // Use a unique key
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ alignItems: 'center' }} // Center FlatList items
         renderItem={({ item }) => (
           <CallCard
-            fullname={'Yassine Castro'}
+            fullname="Yassine Castro"
             location={item.call_location}
             notes={item.call_notes}
             priority={item.call_priority}
