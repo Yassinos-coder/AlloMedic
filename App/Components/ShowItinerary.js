@@ -1,52 +1,137 @@
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import MapView, { Marker } from 'react-native-maps'
-import * as Location from 'expo-location'; // To handle location fetching
+import { StyleSheet, View, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { useSelector } from 'react-redux';
+import { useRoute } from '@react-navigation/native';
+import axios from 'axios';
 
+const GOOGLE_API_KEY = 'AIzaSyApgDV_XWQr4cAkfTa32HvaETgOWUvy11w'; // Replace with your actual API key
 
-const ShowItinerary = () => {
-    const userLocation = useSelector((state) => state.UserReducer.userGPSLocatio)
-    const showItinerary = useSelector((state) => state.AppReducer.ShowItinerary)
-    const [userLocationState, setUserLocationState] = useState(userLocation)
+const ShowItinerary = (props) => {
+    const userLocation = useSelector((state) => state.UserReducer.userGPSLocation);
+    const route = useRoute();
+    const [callData, setCallData] = useState(route.params || {});
+    const [destinationLocation, setDestinationLocation] = useState({ latitude: 0, longitude: 0 });
+    const [routeCoordinates, setRouteCoordinates] = useState([]);
+
     useEffect(() => {
-        setUserLocationState(userLocation)
-        console.log(userLocationState, showItinerary)
-        console.log('Shown')
-    }, [userLocation])
+        // Validate callData and extract destination coordinates
+        if (callData?.location?.coords) {
+            const [latitude, longitude] = callData.location.coords.split(',').map(Number);
+            setDestinationLocation({ latitude, longitude });
+        }
+    }, [callData]);
+
+    useEffect(() => {
+        if (
+            userLocation?.coords?.latitude &&
+            userLocation?.coords?.longitude &&
+            destinationLocation.latitude &&
+            destinationLocation.longitude
+        ) {
+            fetchRoute(
+                userLocation.coords.latitude,
+                userLocation.coords.longitude,
+                destinationLocation.latitude,
+                destinationLocation.longitude
+            );
+        }
+    }, [userLocation, destinationLocation]);
+
+    const fetchRoute = async (originLat, originLng, destLat, destLng) => {
+        try {
+            const response = await axios.get(
+                `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLng}&destination=${destLat},${destLng}&key=${GOOGLE_API_KEY}`
+            );
+            if (response.data.routes.length > 0) {
+                const points = decodePolyline(response.data.routes[0].overview_polyline.points);
+                setRouteCoordinates(points);
+            } else {
+                console.error('No routes found');
+            }
+        } catch (error) {
+            console.error('Error fetching route:', error);
+        }
+    };
+
+    const decodePolyline = (encoded) => {
+        let points = [];
+        let index = 0, len = encoded.length;
+        let lat = 0, lng = 0;
+
+        while (index < len) {
+            let b, shift = 0, result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            let dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            let dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            points.push({ latitude: lat / 1e5, longitude: lng / 1e5 });
+        }
+        return points;
+    };
+
     return (
         <View>
-            {showItinerary ? (
-                <>
-
-                    <MapView
-                        style={{
-                            width: Dimensions.get('window').width,
-                            height: Dimensions.get('window').height,
+            <MapView
+                style={{
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height,
+                }}
+                initialRegion={{
+                    latitude: userLocation?.coords?.latitude || 0,
+                    longitude: userLocation?.coords?.longitude || 0,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }}
+            >
+                {/* User Marker */}
+                {userLocation?.coords?.latitude && userLocation?.coords?.longitude && (
+                    <Marker
+                        coordinate={{
+                            latitude: userLocation.coords.latitude,
+                            longitude: userLocation.coords.longitude,
                         }}
-                        initialRegion={{
-                            latitude: userLocationState?.coords?.latitude || 0,
-                            longitude: userLocationState?.coords?.longitude || 0,
-                            latitudeDelta: 0.01,
-                            longitudeDelta: 0.01,
-                        }}
-                    >
-                        <Marker
-                            coordinate={{
-                                latitude: userLocationState.coords.latitude,
-                                longitude: userLocationState.coords.longitude,
-                            }}
-                            title="Vous"
-                            description="Votre position actuelle"
-                        />
-                    </MapView>
-                </>
-            ) : null}
+                        title="Vous"
+                        description="Votre position actuelle"
+                    />
+                )}
 
+                {/* Destination Marker */}
+                {destinationLocation.latitude && destinationLocation.longitude && (
+                    <Marker
+                        coordinate={destinationLocation}
+                        title="L'appel D'urgence"
+                        description={callData?.location?.address || "Destination"}
+                    />
+                )}
+
+                {/* Polyline for the Route */}
+                {routeCoordinates.length > 0 && (
+                    <Polyline
+                        coordinates={routeCoordinates}
+                        strokeColor="#0000FF" // Blue color
+                        strokeWidth={4}
+                    />
+                )}
+            </MapView>
         </View>
-    )
-}
+    );
+};
 
-export default ShowItinerary
+export default ShowItinerary;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

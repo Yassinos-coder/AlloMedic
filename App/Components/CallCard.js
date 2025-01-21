@@ -4,11 +4,12 @@ import CustomText from './CustomText';
 import { Avatar, Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateShowItinerary } from '../redux/AppReducer';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const CallCard = (props) => {
     const [priority, setPriority] = useState('medium');
     const showItinerary = useSelector((state) => state.AppReducer.ShowItinerary)
-
+    const navigation = useNavigation()
     const dispatch = useDispatch()
     useEffect(() => {
         setPriority(props.priority);
@@ -24,16 +25,19 @@ const CallCard = (props) => {
             borderRadius: 20,
             maxWidth: 120,
             textAlign: 'center',
-            fontSize: 13
+            fontSize: 13,
+            padding: 5
+
         },
         Moyen: {
             color: 'white',
             fontWeight: 'bold',
             backgroundColor: 'orange',
             borderRadius: 20,
-            maxWidth: 70,
+            maxWidth: 120,
             textAlign: 'center',
-            fontSize: 13
+            fontSize: 13,
+            padding: 5
 
         },
         Faible: {
@@ -41,9 +45,11 @@ const CallCard = (props) => {
             fontWeight: 'bold',
             backgroundColor: 'orange',
             borderRadius: 20,
-            maxWidth: 70,
+            maxWidth: 120,
             textAlign: 'center',
-            fontSize: 13
+            fontSize: 13,
+            padding: 5
+
 
         },
     };
@@ -70,15 +76,16 @@ const CallCard = (props) => {
                 <CustomText style={[priorityStyles[priority]]}> Priorité:  {props.priority} </CustomText>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
                     <Icon name="location-pin" type="entypo" size={20} />
-                    <CustomText>: {props.location}</CustomText>
+                    <CustomText>: {props.location.address}</CustomText>
                 </View>
 
                 <CustomText style={{ marginTop: 5 }}>Description: {props.notes} </CustomText>
             </View>
             <View style={styles.viewActions}>
                 <Pressable onPress={() => {
-                    dispatch(updateShowItinerary())
-                    console.log(showItinerary)
+                    // dispatch(updateShowItinerary())
+                    navigation.navigate('ShowItinerary', props)
+                    console.log(props)
                 }}>
                     <View style={[styles.pressables, { backgroundColor: 'yellow' }]}>
                         <Text style={styles.pressableText}>Voir sur la map</Text>
@@ -100,6 +107,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#BEDAEB',
         borderRadius: 20,
+        width: '90%',
         maxWidth: '90%', // Set width relative to parent for consistency
         alignSelf: 'center', // Center horizontally
         shadowColor: '#000',

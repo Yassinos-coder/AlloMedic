@@ -11,6 +11,7 @@ import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import { setUserLocation } from '../redux/UserReducer';
 import CallsScreen from '../Screens/CallsScreen/CallsScreen';
+import ShowItinerary from '../Components/ShowItinerary';
 
 const Drawer = createDrawerNavigator();
 
@@ -93,7 +94,11 @@ const PrivateScreens = () => {
               component={ProfileScreen}
               options={{ title: 'Mon compte' }}
             />
+            <Drawer.Screen
+              name='ShowItinerary'
+              component={ShowItinerary}
 
+            />
           </>
         )}
         {!isLoggedInFromStore && (

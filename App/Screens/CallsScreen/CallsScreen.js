@@ -5,7 +5,6 @@ import socket from "../../utils/socketExpo";
 import CallCard from "../../Components/CallCard";
 import { useDispatch, useSelector } from "react-redux";
 import { GetOnGoingCalls, updateCalls } from "../../redux/CallsReducer";
-import ShowItinerary from "../../Components/ShowItinerary";
 
 const CallsScreen = () => {
   const dispatch = useDispatch();
@@ -39,7 +38,6 @@ const CallsScreen = () => {
 
   return (
     <View>
-      <ShowItinerary />
       <Text style={CallsScreenStyles.title}>Appel D'urgence Active</Text>
       <FlatList
         data={ongoingCalls}
