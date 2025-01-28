@@ -64,6 +64,7 @@ const CallsScreen = () => {
             notes={item.call_notes}
             priority={item.call_priority}
             timestamp={item.call_timestamp}
+            caller_data={item.caller_data}
           />
         )}
         refreshControl={

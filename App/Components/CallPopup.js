@@ -50,6 +50,7 @@ const CallPopup = ({ isVisible }) => {
             const updatedCall = {
                 ...newCall,
                 caller_id: caller_id_option,
+                caller_data: userData,
                 call_location: {
                     address: response.data.results[0]?.formatted || 'Unknown Location',
                     coords: `${userGPSLocation.coords.latitude}, ${userGPSLocation.coords.longitude}`

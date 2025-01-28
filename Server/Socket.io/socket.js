@@ -20,6 +20,7 @@ const setupSocket = (io) => {
                         call_id: savedCall._id,
                         caller_id: data.caller_id,
                         responder_id: data.responder_id,
+                        caller_data : data.caller_data,
                         call_location: {
                             address: data.call_location.address,
                             coords: data.call_location.coords,

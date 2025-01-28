@@ -1,21 +1,23 @@
-import { StyleSheet, View, Dimensions } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { useSelector } from 'react-redux';
+import { View, StyleSheet, Pressable, Dimensions, Linking } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Icon } from '@rneui/themed';
-import { Pressable } from 'react-native-gesture-handler';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import CustomText from '../../Components/CustomText';
 
 const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY; // Replace with your actual API key
 
-const ShowItinerary = () => {
+
+const TakeCallScreen = () => {
     const userLocation = useSelector((state) => state.UserReducer.userGPSLocation);
     const route = useRoute();
     const [callData, setCallData] = useState(route.params || {});
     const [destinationLocation, setDestinationLocation] = useState({ latitude: 0, longitude: 0 });
     const [routeCoordinates, setRouteCoordinates] = useState([]);
     const navigation = useNavigation()
+
     useEffect(() => {
         // Validate callData and extract destination coordinates
         if (callData?.location?.coords) {
@@ -23,6 +25,7 @@ const ShowItinerary = () => {
             console.log(`Destination Coords: ${latitude}, ${longitude}`); // Log destination coordinates
             setDestinationLocation({ latitude, longitude });
         }
+        console.log(callData)
     }, [callData]);
 
     useEffect(() => {
@@ -147,11 +150,46 @@ const ShowItinerary = () => {
                     />
                 )}
             </MapView>
+            <View style={styles.dataContainer}>
+                <CustomText> Donnèe du patient : </CustomText>
+                <View style={styles.callDataView}>
+                    <CustomText>Nom du patient: {callData.caller_data.fullname} </CustomText>
+                    <CustomText>Cas du patient: {callData.notes} </CustomText>
+                </View>
+
+                <View style={styles.iconActions}>
+                    <Icon
+                        name='call'
+                        type="ionicon"
+                        color="green"
+                        size={22}
+                        onPress={() => {
+                            const phoneNumber = `tel:+212${callData.caller_data.phonenumber}`; // Replace with your number format
+                            Linking.canOpenURL(phoneNumber)
+                                .then((supported) => {
+                                    if (supported) {
+                                        Linking.openURL(phoneNumber);
+                                    } else {
+                                        Alert.alert('Error', 'Unable to make a call on this device.');
+                                    }
+                                })
+                                .catch((err) => console.error('Error checking phone call functionality:', err));
+                        }}
+                    />
+                    <Icon
+                        name='cancel'
+                        type='materialicons'
+                        size={22}
+                        color='red'
+                    />
+                </View>
+
+            </View>
         </View>
     );
 };
 
-export default ShowItinerary;
+export default TakeCallScreen
 
 const styles = StyleSheet.create({
     goBackView: {
@@ -163,5 +201,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 20,
         marginLeft: 20
+    },
+    dataContainer: {
+        backgroundColor: '#f4f1de',
+        position: 'absolute',
+        zIndex: 10,
+        width: 300,
+        height: 150,
+        borderRadius: 20,
+        bottom: 20, // Position 20px from the bottom of the screen
+        left: '50%',
+        transform: [{ translateX: -150 }], // Offset to center the container (width / 2)
+        padding: 20
+    },
+    callDataView: {
+        paddingLeft: 20
+    },
+    iconActions: {
+        flexDirection: 'row',
+        justifyContent:'center',
     }
+
 });

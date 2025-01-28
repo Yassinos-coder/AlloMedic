@@ -88,12 +88,15 @@ const CallCard = (props) => {
                     console.log(props)
                 }}>
                     <View style={[styles.pressables, { backgroundColor: 'yellow' }]}>
-                        <Text style={styles.pressableText}>Voir sur la map</Text>
+                        <CustomText style={styles.pressableText}>Voir sur la map</CustomText>
                     </View>
                 </Pressable>
-                <Pressable>
+                <Pressable onPress={() => {
+                    navigation.navigate('TakeCallScreen', props)
+                    console.log(props)
+                }}>
                     <View style={styles.pressables}>
-                        <Text style={[styles.pressableText, { color: 'white' }]}>Repondre à l'appel</Text>
+                        <CustomText style={[styles.pressableText, { color: 'white' }]}>Repondre à l'appel</CustomText>
                     </View>
                 </Pressable>
             </View>

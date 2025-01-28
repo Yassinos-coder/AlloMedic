@@ -12,6 +12,7 @@ import * as Notifications from 'expo-notifications';
 import { setUserLocation } from '../redux/UserReducer';
 import CallsScreen from '../Screens/CallsScreen/CallsScreen';
 import ShowItinerary from '../Components/ShowItinerary';
+import TakeCallScreen from '../Screens/TakeCallScreen/TakeCallScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -104,6 +105,17 @@ const PrivateScreens = () => {
               }}
 
             />
+            <Drawer.Screen
+              name='TakeCallScreen'
+              component={TakeCallScreen}
+              options={{
+                headerShown: false,
+                title: 'Itinèraire vers l\'appel',
+                drawerItemStyle: { display: 'none' },
+              }}
+
+            />
+            
           </>
         )}
         {!isLoggedInFromStore && (

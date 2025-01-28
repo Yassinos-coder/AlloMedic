@@ -34,6 +34,10 @@ const CallsSchema = new mongoose.Schema({
     call_timestamp: {
         type: String,
         required: true
+    },
+    caller_data: {
+        type: Object,
+        required: false
     }
 });
 
