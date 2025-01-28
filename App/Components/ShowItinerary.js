@@ -2,10 +2,12 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { useSelector } from 'react-redux';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import { Icon } from '@rneui/themed';
+import { Pressable } from 'react-native-gesture-handler';
 
-const GOOGLE_API_KEY = 'AIzaSyApgDV_XWQr4cAkfTa32HvaETgOWUvy11w'; // Replace with your actual API key
+const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY; // Replace with your actual API key
 
 const ShowItinerary = (props) => {
     const userLocation = useSelector((state) => state.UserReducer.userGPSLocation);
@@ -13,11 +15,12 @@ const ShowItinerary = (props) => {
     const [callData, setCallData] = useState(route.params || {});
     const [destinationLocation, setDestinationLocation] = useState({ latitude: 0, longitude: 0 });
     const [routeCoordinates, setRouteCoordinates] = useState([]);
-
+    const navigation = useNavigation()
     useEffect(() => {
         // Validate callData and extract destination coordinates
         if (callData?.location?.coords) {
             const [latitude, longitude] = callData.location.coords.split(',').map(Number);
+            console.log(`Destination Coords: ${latitude}, ${longitude}`); // Log destination coordinates
             setDestinationLocation({ latitude, longitude });
         }
     }, [callData]);
@@ -29,6 +32,7 @@ const ShowItinerary = (props) => {
             destinationLocation.latitude &&
             destinationLocation.longitude
         ) {
+            console.log(`User Coords: ${userLocation.coords.latitude}, ${userLocation.coords.longitude}`); // Log user coordinates
             fetchRoute(
                 userLocation.coords.latitude,
                 userLocation.coords.longitude,
@@ -37,6 +41,7 @@ const ShowItinerary = (props) => {
             );
         }
     }, [userLocation, destinationLocation]);
+
 
     const fetchRoute = async (originLat, originLng, destLat, destLng) => {
         try {
@@ -86,6 +91,20 @@ const ShowItinerary = (props) => {
 
     return (
         <View>
+            <Pressable style={{ zIndex: 10 }} >
+                <View style={styles.goBackView} >
+                    <Icon
+                        name="back"
+                        type="antdesign"
+                        color="black"
+                        size={22}
+                        onPress={
+                            () => navigation.navigate('HomeScreen')
+                        }
+                    />
+                </View>
+            </Pressable>
+
             <MapView
                 style={{
                     width: Dimensions.get('window').width,
@@ -134,4 +153,15 @@ const ShowItinerary = (props) => {
 
 export default ShowItinerary;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    goBackView: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+        justifyContent: 'center',
+        marginTop: 20,
+        marginLeft: 20
+    }
+});

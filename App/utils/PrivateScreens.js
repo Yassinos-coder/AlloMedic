@@ -97,6 +97,11 @@ const PrivateScreens = () => {
             <Drawer.Screen
               name='ShowItinerary'
               component={ShowItinerary}
+              options={{
+                headerShown: false,
+                title: 'Itinèraire vers l\'appel',
+                drawerItemStyle: { display: 'none' },
+              }}
 
             />
           </>
