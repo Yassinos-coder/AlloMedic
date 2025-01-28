@@ -17,6 +17,16 @@ export const CreateUrgentCall = createAsyncThunk(
     }
 );
 
+export const updateCallStatus = createAsyncThunk('calls/updateCallStatus', async (data) => {
+    try {
+        socket.emit('updateCallStatus', data)
+        return data
+    } catch (err) {
+        console.error("Error creating urgent call", err);
+        throw err; // Ensure the error is propagated
+    }
+})
+
 export const GetOnGoingCalls = createAsyncThunk('calls/GetOnGoingCalls', async ({ }) => {
     try {
         const response = await AxiosDefault.get('/calls/GetOnGoingCalls')

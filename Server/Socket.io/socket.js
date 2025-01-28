@@ -20,7 +20,7 @@ const setupSocket = (io) => {
                         call_id: savedCall._id,
                         caller_id: data.caller_id,
                         responder_id: data.responder_id,
-                        caller_data : data.caller_data,
+                        caller_data: data.caller_data,
                         call_location: {
                             address: data.call_location.address,
                             coords: data.call_location.coords,
@@ -37,6 +37,19 @@ const setupSocket = (io) => {
                 console.error("Error in handling urgent call:", error);
             }
         });
+
+        socket.on('updateCallStatus', async (data) => {
+            try {
+                let call_id = data.call_id
+                await CallsModel.updateOne({ _id: call_id }, { call_status: 'completed' })
+                
+                io.emit('urgentCallUpdate', {
+
+                })
+            } catch (err) {
+
+            }
+        })
 
         // Handle client disconnect
         socket.on("disconnect", () => {
