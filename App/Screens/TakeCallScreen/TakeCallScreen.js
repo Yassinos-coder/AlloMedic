@@ -19,6 +19,7 @@ const TakeCallScreen = () => {
     const navigation = useNavigation()
 
     useEffect(() => {
+        setCallData(route.params || {})
         // Validate callData and extract destination coordinates
         if (callData?.location?.coords) {
             const [latitude, longitude] = callData.location.coords.split(',').map(Number);
@@ -44,23 +45,6 @@ const TakeCallScreen = () => {
             );
         }
     }, [userLocation, destinationLocation]);
-
-
-    const fetchRoute = async (originLat, originLng, destLat, destLng) => {
-        try {
-            const response = await axios.get(
-                `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLng}&destination=${destLat},${destLng}&key=${GOOGLE_API_KEY}`
-            );
-            if (response.data.routes.length > 0) {
-                const points = decodePolyline(response.data.routes[0].overview_polyline.points);
-                setRouteCoordinates(points);
-            } else {
-                console.error('No routes found');
-            }
-        } catch (error) {
-            console.error('Error fetching route:', error);
-        }
-    };
 
     const decodePolyline = (encoded) => {
         let points = [];
@@ -91,6 +75,24 @@ const TakeCallScreen = () => {
         }
         return points;
     };
+
+    const fetchRoute = async (originLat, originLng, destLat, destLng) => {
+        try {
+            const response = await axios.get(
+                `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLng}&destination=${destLat},${destLng}&key=${GOOGLE_API_KEY}`
+            );
+            if (response.data.routes.length > 0) {
+                const points = decodePolyline(response.data.routes[0].overview_polyline.points);
+                setRouteCoordinates(points);
+            } else {
+                console.error('No routes found');
+            }
+        } catch (error) {
+            console.error('Error fetching route:', error);
+        }
+    };
+
+
 
     return (
         <View>
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
     },
     iconActions: {
         flexDirection: 'row',
-        justifyContent:'center',
+        justifyContent: 'center',
     }
 
 });
