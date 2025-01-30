@@ -127,7 +127,7 @@ const ShowItinerary = () => {
                         }}
                         title="Vous"
                         description="Votre position actuelle"
-                        image={MedicalPin} 
+                        icon={{uri:'http://192.168.100.148:8009/medicalPin.png'}} 
 
                     />
                 )}
