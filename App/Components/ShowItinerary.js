@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { Icon } from '@rneui/themed';
 import { Pressable } from 'react-native-gesture-handler';
+import MedicalPin from  '../assets/images/medicalPin.png';
 
 const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY; // Replace with your actual API key
 
@@ -126,6 +127,8 @@ const ShowItinerary = () => {
                         }}
                         title="Vous"
                         description="Votre position actuelle"
+                        image={MedicalPin} 
+
                     />
                 )}
 
@@ -135,7 +138,9 @@ const ShowItinerary = () => {
                         coordinate={destinationLocation}
                         title="L'appel D'urgence"
                         description={callData?.location?.address || "Destination"}
-                    />
+                        image={MedicalPin}
+                        />
+
                 )}
 
                 {/* Polyline for the Route */}
@@ -143,7 +148,7 @@ const ShowItinerary = () => {
                     <Polyline
                         coordinates={routeCoordinates}
                         strokeColor="#0000FF" // Blue color
-                        strokeWidth={4}
+                        strokeWidth={1}
                     />
                 )}
             </MapView>
