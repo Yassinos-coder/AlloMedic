@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { Icon } from '@rneui/themed';
 import { Pressable } from 'react-native-gesture-handler';
-import MedicalPin from  '../assets/images/medicalPin.png';
+import MedicalPin from '../assets/images/medicalPin.png';
 
 const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY; // Replace with your actual API key
 
@@ -127,8 +127,6 @@ const ShowItinerary = () => {
                         }}
                         title="Vous"
                         description="Votre position actuelle"
-                        icon={{uri:'http://192.168.100.148:8009/medicalPin.png'}} 
-
                     />
                 )}
 
@@ -138,8 +136,8 @@ const ShowItinerary = () => {
                         coordinate={destinationLocation}
                         title="L'appel D'urgence"
                         description={callData?.location?.address || "Destination"}
-                        image={MedicalPin}
-                        />
+                        image={{ uri: 'http://192.168.100.148:8009/medicalPin.png', height:50, width: 50 }}
+                    />
 
                 )}
 
