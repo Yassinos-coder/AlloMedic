@@ -136,7 +136,7 @@ const ShowItinerary = () => {
                         coordinate={destinationLocation}
                         title="L'appel D'urgence"
                         description={callData?.location?.address || "Destination"}
-                        image={{ uri: 'http://192.168.100.148:8009/medicalPin.png', height:50, width: 50 }}
+                        image={{ uri: 'http://192.168.100.148:8009/medicalPin.png' }}
                     />
 
                 )}
