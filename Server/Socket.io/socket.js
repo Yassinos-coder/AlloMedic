@@ -30,6 +30,7 @@ const setupSocket = (io) => {
                         call_notes: data.call_notes,
                         call_status: data.call_status,
                         call_timestamp: data.call_timestamp,
+                        call_price: data.call_price,
                         call_sent: 'success'
                     });
                 }
@@ -42,12 +43,21 @@ const setupSocket = (io) => {
             try {
                 let call_id = data.call_id
                 await CallsModel.updateOne({ _id: call_id }, { call_status: 'completed' })
-                
+
                 io.emit('urgentCallUpdate', {
 
                 })
             } catch (err) {
 
+            }
+        })
+        socket.on('triggerCallAccepted', async (data) => {
+            try {
+                let call_id = data.call_id
+                io.emit('triggerCallAcceptedForClient')
+                console.log('Call accepted')
+            } catch (err) {
+                console.err(`Error on triggerCallAccepted, ${err.message}`)
             }
         })
 

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, Dimensions, Linking } from 'react-native'
+import { View, StyleSheet, Pressable, Dimensions, Linking, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -140,7 +140,14 @@ const TakeCallScreen = () => {
                         coordinate={destinationLocation}
                         title="L'appel D'urgence"
                         description={callData?.location?.address || "Destination"}
-                    />
+                    >
+                        <Image
+                            source={{ uri: 'http://192.168.100.148:8009/medicalPin.png' }}
+                            style={{ width: 30, height: 30 }} // Adjust width & height as needed
+                            resizeMode="contain"
+                        />
+                    </Marker>
+
                 )}
 
                 {/* Polyline for the Route */}
@@ -157,6 +164,7 @@ const TakeCallScreen = () => {
                 <View style={styles.callDataView}>
                     <CustomText>Nom du patient: {callData.caller_data.fullname} </CustomText>
                     <CustomText>Cas du patient: {callData.notes} </CustomText>
+                    <CustomText> Prix Accepter: </CustomText>
                 </View>
 
                 <View style={styles.iconActions}>

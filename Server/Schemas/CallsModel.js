@@ -38,6 +38,10 @@ const CallsSchema = new mongoose.Schema({
     caller_data: {
         type: Object,
         required: false
+    },
+    call_price: { 
+        type: String,
+        required: false
     }
 });
 
