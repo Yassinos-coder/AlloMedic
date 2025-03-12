@@ -133,11 +133,16 @@ const ShowItinerary = () => {
                 {/* Destination Marker */}
                 {destinationLocation.latitude && destinationLocation.longitude && (
                     <Marker
-                        coordinate={destinationLocation}
-                        title="L'appel D'urgence"
-                        description={callData?.location?.address || "Destination"}
-                        image={{ uri: 'http://192.168.100.148:8009/medicalPin.png' }}
+                    coordinate={destinationLocation}
+                    title="L'appel D'urgence"
+                    description={callData?.location?.address || "Destination"}
+                >
+                    <Image
+                        source={{ uri: 'http://192.168.100.148:8009/medicalPin.png' }}
+                        style={{ width: 30, height: 30 }} // Adjust width & height as needed
+                        resizeMode="contain"
                     />
+                </Marker>
 
                 )}
 

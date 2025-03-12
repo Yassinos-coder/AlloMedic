@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Initialize socket connection
-const socket = io("http://192.168.100.148:8009", {
+const socket = io("http://192.168.0.104:8009", {
     transports: ["websocket"], // Use WebSocket transport
     forceNew: true, // Optional: Always create a new connection
     reconnection: true, // Enable reconnection
